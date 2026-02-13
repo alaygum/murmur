@@ -24,7 +24,6 @@
       width: 100%;
     }
 
-    /* Единая сетка: текст, гифка, зона кнопок (и на экране 2 тоже) */
     .screen {
       display: grid;
       grid-template-rows: auto auto auto;
@@ -33,10 +32,9 @@
       justify-items: center;
     }
 
-    /* ОДИНАКОВЫЙ текстовый блок для обоих экранов */
     .titleBlock{
       width: 100%;
-      min-height: 92px; /* фиксируем высоту, чтобы совпадало по месту */
+      min-height: 92px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -53,7 +51,6 @@
       display: block;
     }
 
-    /* ОДИНАКОВЫЙ блок гифки */
     .gif-container {
       width: 100%;
       display: flex;
@@ -70,7 +67,6 @@
       display:block;
     }
 
-    /* ОДИНАКОВАЯ по высоте зона под кнопки (на экране 2 тоже есть место) */
     .stage {
       width: 100%;
       min-height: 120px;
@@ -177,12 +173,12 @@
         <span class="line">Ты будешь моим Мурмуром?</span>
       </div>
 
-      <div class="gif-container">
-        <img id="askGif" src="ask.gif" alt="Котёнок" loading="eager" />
+      <div class="gif-container" id="askGifWrap">
+        <img id="askGif" src="ask.gif" alt="Котёнок" loading="eager" decoding="sync" />
       </div>
 
       <div class="stage" id="stage">
-        <button class="btn yesBtn" id="yesBtn">Да 🥐</button>
+        <button class="btn yesBtn" id="yesBtn">Да 💘</button>
         <button class="btn noBtn" id="noBtn" aria-disabled="true" tabindex="-1">Нет</button>
       </div>
     </div>
@@ -193,11 +189,10 @@
         <span class="line">Мой любимый ласковый Мурмур!</span>
       </div>
 
-      <div class="gif-container">
-        <img id="celebrateGif" src="celebrate.gif" alt="Празднование" loading="eager" />
+      <div class="gif-container" id="celebrateGifWrap">
+        <img id="celebrateGif" src="celebrate.gif" alt="Празднование" loading="eager" decoding="sync" />
       </div>
 
-      <!-- ВАЖНО: stage оставляем, чтобы сетка была идентична -->
       <div class="stage" aria-hidden="true"></div>
     </div>
   </div>
@@ -215,21 +210,37 @@
     const viewAsk = document.getElementById("viewAsk");
     const viewYes = document.getElementById("viewYes");
 
-    const askGif = document.getElementById("askGif");
-    const celebrateGif = document.getElementById("celebrateGif");
+    let askGif = document.getElementById("askGif");
+    let celebrateGif = document.getElementById("celebrateGif");
+
+    const askGifWrap = document.getElementById("askGifWrap");
+    const celebrateGifWrap = document.getElementById("celebrateGifWrap");
 
     const confettiCanvas = document.getElementById("confetti");
     const ctx = confettiCanvas.getContext("2d");
 
-    function bumpGifOnIOS(img, baseFile){
-      if (!isIOS) return;
-      const base = baseFile || (img.getAttribute("data-base") || img.src.split("?")[0]);
-      img.setAttribute("data-base", base);
-      img.src = base + "?v=" + Date.now();
+    function forceRestartGif(img, file){
+      const clone = img.cloneNode(true);
+      clone.src = file + "?v=" + Date.now();
+      img.parentNode.replaceChild(clone, img);
+      return clone;
     }
 
-    bumpGifOnIOS(askGif, "ask.gif");
-    bumpGifOnIOS(celebrateGif, "celebrate.gif");
+    function restartGifsIfIOS(){
+      if (!isIOS) return;
+      askGif = forceRestartGif(askGif, "ask.gif");
+      celebrateGif = forceRestartGif(celebrateGif, "celebrate.gif");
+    }
+
+    restartGifsIfIOS();
+
+    document.addEventListener("visibilitychange", () => {
+      if (!isIOS) return;
+      if (document.visibilityState === "visible") {
+        if (!viewAsk.classList.contains("hidden")) askGif = forceRestartGif(askGif, "ask.gif");
+        if (!viewYes.classList.contains("hidden")) celebrateGif = forceRestartGif(celebrateGif, "celebrate.gif");
+      }
+    });
 
     function clamp(v, a, b){
       return Math.max(a, Math.min(b, v));
@@ -522,19 +533,7 @@
         vy = rand(2.8, 6.4);
       }
 
-      return {
-        x, y,
-        vx, vy,
-        w, h,
-        shape,
-        color,
-        rot: rand(0, Math.PI*2),
-        vr: rand(-0.22, 0.22),
-        life: 0,
-        ttl: rand(1100, 1900),
-        swing: rand(0.6, 1.5),
-        sway: rand(0.8, 2.4)
-      };
+      return { x, y, vx, vy, w, h, shape, color, rot: rand(0, Math.PI*2), vr: rand(-0.22, 0.22), life: 0, ttl: rand(1100, 1900), swing: rand(0.6, 1.5), sway: rand(0.8, 2.4) };
     }
 
     function confettiBurst(cx, cy, n){
@@ -586,17 +585,14 @@
 
       for (let i = confetti.parts.length - 1; i >= 0; i--){
         const p = confetti.parts[i];
-
         p.life += dt;
 
         p.vx *= drag;
         p.vy *= drag;
-
         p.vy += gravity;
 
         p.x += p.vx + Math.sin((p.life/180) * p.swing) * 0.35;
         p.y += p.vy + Math.cos((p.life/240) * p.sway) * 0.22;
-
         p.rot += p.vr;
 
         drawPart(p);
@@ -604,14 +600,10 @@
         const out = p.y > window.innerHeight + 80 || p.x < -120 || p.x > window.innerWidth + 120;
         const dead = p.life > p.ttl;
 
-        if (out || dead){
-          confetti.parts.splice(i, 1);
-        }
+        if (out || dead) confetti.parts.splice(i, 1);
       }
 
-      if (t < 380){
-        confettiRain(14);
-      }
+      if (t < 380) confettiRain(14);
 
       if (confetti.parts.length === 0 && t > 900){
         confetti.on = false;
@@ -628,7 +620,6 @@
       confetti.on = true;
       confetti.parts = [];
       confetti.t0 = performance.now();
-
       confettiCanvas.classList.add("on");
 
       const cx = window.innerWidth / 2;
@@ -645,11 +636,10 @@
 
     yesBtn.addEventListener("click", () => {
       startConfetti();
-
       viewAsk.classList.add("hidden");
       viewYes.classList.remove("hidden");
 
-      bumpGifOnIOS(celebrateGif, "celebrate.gif");
+      if (isIOS) celebrateGif = forceRestartGif(celebrateGif, "celebrate.gif");
     });
   </script>
 </body>
