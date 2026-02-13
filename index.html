@@ -16,9 +16,8 @@
       --shadow: 0 12px 40px rgba(0,0,0,.45);
       --radius: 22px;
 
-      --yesScale: 1;
-      --nyW: 260px;
-      --nyH: 120px;
+      --nyW: 210px;
+      --nyH: 90px;
     }
 
     *{ box-sizing:border-box; }
@@ -47,33 +46,19 @@
       position:relative;
     }
 
-    .header{
-      display:flex;
-      gap:18px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-
     h1{
       margin:0;
       font-size: clamp(22px, 3.2vw, 34px);
       letter-spacing: .2px;
-    }
-
-    .sub{
-      margin:6px 0 0 0;
-      color:var(--muted);
-      font-size: 14px;
-      line-height: 1.35;
+      text-align:center;
+      line-height:1.15;
     }
 
     .gifWrap{
       display:flex;
       align-items:center;
       justify-content:center;
-      margin: 14px 0 18px 0;
+      margin: 18px 0 18px 0;
     }
 
     .gifWrap img{
@@ -81,15 +66,14 @@
       border-radius:18px;
       border:1px solid rgba(255,255,255,.10);
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      background: rgba(255,255,255,.03);
     }
 
-    .actions{
+    .stage{
+      width:min(520px, 86vw);
+      height: 120px;
+      margin: 0 auto;
       position:relative;
-      height: 140px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:22px;
       user-select:none;
       touch-action: manipulation;
     }
@@ -103,40 +87,23 @@
       cursor:pointer;
       transition: transform .15s ease, filter .15s ease;
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      position:relative;
-      z-index:2;
+      position:absolute;
+      top: 50%;
+      transform: translateY(-50%);
       white-space:nowrap;
     }
 
     .yesShell{
-      position:relative;
+      position:absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding: 28px 36px;
+      padding: 22px 28px;
       border-radius: 999px;
       isolation:isolate;
-      transform: scale(var(--yesScale));
-      transition: transform .18s ease;
-    }
-
-    .yesBtn{
-      background: linear-gradient(135deg, var(--yes), var(--yes2));
-      color:#17061c;
-      text-shadow: 0 1px 0 rgba(255,255,255,.25);
-      transform: translateZ(0);
-      filter: saturate(1.1);
-      animation: breathe 1.9s ease-in-out infinite;
-    }
-    .yesBtn:hover{
-      transform: scale(1.08);
-      filter: brightness(1.05) saturate(1.2);
-    }
-
-    @keyframes breathe{
-      0%{ transform: scale(1.00); }
-      50%{ transform: scale(1.04); }
-      100%{ transform: scale(1.00); }
     }
 
     .halo{
@@ -150,10 +117,40 @@
       z-index:-1;
       animation: glow 2.3s ease-in-out infinite;
     }
+
     @keyframes glow{
       0%{ opacity:.45; transform: scale(1.00); }
       50%{ opacity:.70; transform: scale(1.05); }
       100%{ opacity:.45; transform: scale(1.00); }
+    }
+
+    .yesBtn{
+      position:relative;
+      top:auto;
+      transform:none;
+      background: linear-gradient(135deg, var(--yes), var(--yes2));
+      color:#17061c;
+      text-shadow: 0 1px 0 rgba(255,255,255,.25);
+      filter: saturate(1.1);
+      animation: breathe 1.9s ease-in-out infinite;
+    }
+
+    @keyframes breathe{
+      0%{ transform: scale(1.00); }
+      50%{ transform: scale(1.04); }
+      100%{ transform: scale(1.00); }
+    }
+
+    .yesBtn:hover{
+      transform: scale(1.08);
+      filter: brightness(1.05) saturate(1.2);
+    }
+
+    .noBtn{
+      right: 0;
+      background: rgba(255,255,255,.10);
+      color: #e8ebff;
+      border:1px solid rgba(255,255,255,.18);
     }
 
     .nyan{
@@ -164,7 +161,6 @@
       z-index:3;
       left:0;
       top:0;
-      transform: translate(0,0);
       filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
       animation: nyanLoop 2.8s linear infinite;
     }
@@ -173,31 +169,12 @@
       height:100%;
       object-fit:contain;
     }
-
     @keyframes nyanLoop{
       0%   { transform: translate(0px, 0px); }
       25%  { transform: translate(var(--nyW), 0px); }
       50%  { transform: translate(var(--nyW), var(--nyH)); }
       75%  { transform: translate(0px, var(--nyH)); }
       100% { transform: translate(0px, 0px); }
-    }
-
-    .noBtn{
-      background: rgba(255,255,255,.08);
-      color: #e8ebff;
-      border:1px solid rgba(255,255,255,.16);
-      position:absolute;
-      left: 60%;
-      top: 65%;
-      transform: translate(-50%, -50%);
-      cursor:not-allowed;
-    }
-
-    .note{
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      text-align:center;
     }
 
     .hidden{ display:none; }
@@ -229,7 +206,6 @@
       width: 10px;
       height: 16px;
       border-radius: 4px;
-      background: rgba(255,255,255,.9);
       opacity:.95;
       transform: translateY(-30px) rotate(0deg);
       animation: fall 1.2s ease-in forwards;
@@ -247,20 +223,15 @@
   </style>
 </head>
 <body>
-  <div class="card" id="card">
+  <div class="card">
     <div id="viewAsk">
-      <div class="header">
-        <div>
-          <h1>Ты будешь моим Мурмуром?</h1>
-          <p class="sub">Выбирай сердцем, а «Нет» сегодня держит дистанцию</p>
-        </div>
-      </div>
+      <h1>Ты будешь моим Мурмуром?</h1>
 
       <div class="gifWrap">
-        <img id="mainGif" src="ask.gif" alt="Котёнок" />
+        <img id="mainGif" src="ask.gif" alt="Котёнок" loading="eager" />
       </div>
 
-      <div class="actions" id="arena">
+      <div class="stage" id="stage">
         <div class="yesShell" id="yesShell">
           <div class="halo"></div>
           <button class="yesBtn" id="yesBtn">Да 💘</button>
@@ -269,22 +240,15 @@
           </div>
         </div>
 
-        <button class="noBtn" id="noBtn" aria-disabled="true" tabindex="-1">Нет</button>
+        <button class="noBtn" id="noBtn">Нет</button>
       </div>
-
-      <div class="note">Подсказка: кнопка «Нет» очень стеснительная и на курсор смотрит как на хищника</div>
     </div>
 
     <div id="viewYes" class="hidden">
-      <div class="header">
-        <div>
-          <h1>Ура, мой Мурмур 😻</h1>
-          <p class="sub">Это официально и очень приятно</p>
-        </div>
-      </div>
+      <h1>Ура!<br>Мой любимый ласковый Мурмур!</h1>
 
       <div class="gifWrap">
-        <img id="celebrateGif" src="celebrate.gif" alt="Празднуем" />
+        <img id="celebrateGif" src="celebrate.gif" alt="Празднуем" loading="eager" />
       </div>
     </div>
   </div>
@@ -304,10 +268,10 @@
     const mainGif = document.getElementById("mainGif");
     const celebrateGif = document.getElementById("celebrateGif");
 
-    const arena = document.getElementById("arena");
-    const noBtn = document.getElementById("noBtn");
-    const yesBtn = document.getElementById("yesBtn");
+    const stage = document.getElementById("stage");
     const yesShell = document.getElementById("yesShell");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
     const nyan = document.getElementById("nyan");
     const confetti = document.getElementById("confetti");
 
@@ -321,7 +285,7 @@
 
     function updateNyanPath(){
       const rect = yesShell.getBoundingClientRect();
-      const pad = 22;
+      const pad = 34;
       const w = Math.max(140, rect.width - pad);
       const h = Math.max(70, rect.height - pad);
       document.documentElement.style.setProperty("--nyW", `${w}px`);
@@ -330,14 +294,10 @@
     window.addEventListener("resize", updateNyanPath, { passive: true });
     updateNyanPath();
 
-    let yesScale = 1;
-    const MIN_DIST = 165;
-    const MARGIN = 12;
+    const MIN_DIST = 110;
+    const STEP = 70;
+    const MARGIN = 10;
     let rafId = null;
-
-    function rectsOverlap(r1, r2){
-      return !(r2.left > r1.right || r2.right < r1.left || r2.top > r1.bottom || r2.bottom < r1.top);
-    }
 
     function spawnPuff(x, y){
       const el = document.createElement("div");
@@ -349,105 +309,118 @@
       setTimeout(() => el.remove(), 650);
     }
 
-    function setNoPosition(leftPx, topPx){
+    function rectsOverlap(r1, r2){
+      return !(r2.left > r1.right || r2.right < r1.left || r2.top > r1.bottom || r2.bottom < r1.top);
+    }
+
+    function getNoRect(){ return noBtn.getBoundingClientRect(); }
+
+    function setNoPos(leftPx, topPx){
       noBtn.style.left = `${leftPx}px`;
       noBtn.style.top = `${topPx}px`;
+      noBtn.style.right = "auto";
       noBtn.style.transform = "translate(-50%, -50%)";
     }
 
-    function getNoCenter(){
-      const r = noBtn.getBoundingClientRect();
-      return { x: r.left + r.width / 2, y: r.top + r.height / 2, r };
+    function ensureNoHasExplicitPos(){
+      const r = getNoRect();
+      const sr = stage.getBoundingClientRect();
+      const x = r.left - sr.left + r.width / 2;
+      const y = r.top - sr.top + r.height / 2;
+      setNoPos(x, y);
     }
 
-    function pickFarPosition(cursorX, cursorY){
-      const noRect = noBtn.getBoundingClientRect();
-      const yesRect = yesShell.getBoundingClientRect();
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
-      const minX = MARGIN + noRect.width / 2;
-      const maxX = window.innerWidth - MARGIN - noRect.width / 2;
-      const minY = MARGIN + noRect.height / 2;
-      const maxY = window.innerHeight - MARGIN - noRect.height / 2;
+    function moveNoAway(cursorX, cursorY){
+      const sr = stage.getBoundingClientRect();
+      const r = getNoRect();
+      const yesR = yesShell.getBoundingClientRect();
 
-      let best = null;
+      const noCx = r.left + r.width/2;
+      const noCy = r.top + r.height/2;
 
-      for(let i = 0; i < 70; i++){
-        const x = minX + Math.random() * (maxX - minX);
-        const y = minY + Math.random() * (maxY - minY);
-
-        const dx = x - cursorX;
-        const dy = y - cursorY;
-        const d = Math.hypot(dx, dy);
-
-        const candidateRect = {
-          left: x - noRect.width/2,
-          right: x + noRect.width/2,
-          top: y - noRect.height/2,
-          bottom: y + noRect.height/2
-        };
-
-        const overlapsYes = rectsOverlap(candidateRect, yesRect);
-        if(d >= MIN_DIST && !overlapsYes){
-          return { x, y };
-        }
-
-        if(!best || d > best.d){
-          best = { x, y, d };
-        }
-      }
-
-      return { x: best.x, y: best.y };
-    }
-
-    function bumpYes(){
-      yesScale = Math.min(1.58, yesScale + 0.03);
-      document.documentElement.style.setProperty("--yesScale", yesScale.toFixed(3));
-    }
-
-    function evadeIfNeeded(cursorX, cursorY){
-      const before = getNoCenter();
-      const dx = before.x - cursorX;
-      const dy = before.y - cursorY;
+      const dx = noCx - cursorX;
+      const dy = noCy - cursorY;
       const dist = Math.hypot(dx, dy);
 
       if(dist >= MIN_DIST) return;
 
-      spawnPuff(before.x, before.y);
-      bumpYes();
+      spawnPuff(noCx, noCy);
 
-      const p = pickFarPosition(cursorX, cursorY);
-      setNoPosition(p.x, p.y);
+      let ux = dx / (dist || 1);
+      let uy = dy / (dist || 1);
+
+      if(dist === 0){
+        const a = Math.random() * Math.PI * 2;
+        ux = Math.cos(a);
+        uy = Math.sin(a);
+      }
+
+      const jitter = () => (Math.random() - 0.5) * 18;
+
+      let targetX = (noCx - sr.left) + ux * STEP + jitter();
+      let targetY = (noCy - sr.top) + uy * STEP + jitter();
+
+      const minX = MARGIN + r.width/2;
+      const maxX = sr.width - MARGIN - r.width/2;
+      const minY = MARGIN + r.height/2;
+      const maxY = sr.height - MARGIN - r.height/2;
+
+      targetX = clamp(targetX, minX, maxX);
+      targetY = clamp(targetY, minY, maxY);
+
+      const candidate = {
+        left: sr.left + targetX - r.width/2,
+        right: sr.left + targetX + r.width/2,
+        top: sr.top + targetY - r.height/2,
+        bottom: sr.top + targetY + r.height/2
+      };
+
+      if(rectsOverlap(candidate, yesR)){
+        targetX = clamp(targetX + (targetX < sr.width/2 ? -STEP : STEP), minX, maxX);
+        targetY = clamp(targetY + (targetY < sr.height/2 ? -STEP : STEP), minY, maxY);
+      }
+
+      setNoPos(targetX, targetY);
     }
 
     function onMouseMove(e){
       if(rafId) return;
       const x = e.clientX;
       const y = e.clientY;
-
       rafId = requestAnimationFrame(() => {
         rafId = null;
-        evadeIfNeeded(x, y);
+        moveNoAway(x, y);
       });
     }
 
     document.addEventListener("mousemove", onMouseMove, { passive: true });
 
-    document.addEventListener("touchstart", (e) => {
+    stage.addEventListener("touchstart", (e) => {
       const t = e.touches && e.touches[0];
       if(!t) return;
-      evadeIfNeeded(t.clientX, t.clientY);
+      moveNoAway(t.clientX, t.clientY);
+    }, { passive: true });
+
+    stage.addEventListener("touchmove", (e) => {
+      const t = e.touches && e.touches[0];
+      if(!t) return;
+      moveNoAway(t.clientX, t.clientY);
     }, { passive: true });
 
     noBtn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
+      const r = getNoRect();
+      spawnPuff(r.left + r.width/2, r.top + r.height/2);
     });
 
     function launchConfetti(){
       confetti.classList.remove("hidden");
       confetti.innerHTML = "";
-
       const pieces = 28;
+
       for(let i = 0; i < pieces; i++){
         const s = document.createElement("span");
         s.style.left = (Math.random() * 100) + "vw";
@@ -474,11 +447,17 @@
       launchConfetti();
       viewAsk.classList.add("hidden");
       viewYes.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "instant" });
     });
 
-    (function initNo(){
-      const p = pickFarPosition(window.innerWidth * 0.6, window.innerHeight * 0.6);
-      setNoPosition(p.x, p.y);
+    // Инициализация позиции "Нет" в правой части stage, но с явными координатами
+    (function init(){
+      ensureNoHasExplicitPos();
+      const sr = stage.getBoundingClientRect();
+      const r = getNoRect();
+      const x = sr.width - (r.width/2) - 14;
+      const y = sr.height / 2;
+      setNoPos(x, y);
     })();
   </script>
 </body>
