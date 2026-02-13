@@ -4,140 +4,111 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Мурмур</title>
+
   <style>
-    :root{
-      --bgA:#050612;
-      --bgB:#070a1a;
-      --panel: rgba(13, 18, 42, 0.72);
-      --border: rgba(255,255,255,0.10);
-      --text: rgba(255,255,255,0.92);
-
-      --yes1:#ff4fd8;
-      --yes2:#ffb84f;
-
-      --shadow: 0 18px 50px rgba(0,0,0,0.45);
-      --radius: 26px;
+    body {
+      font-family: 'Futura', 'Century Gothic', 'Arial', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #d4ecff 100%);
+      margin: 0;
+      overflow: hidden;
     }
 
-    *{ box-sizing:border-box; }
-
-    body{
-      margin:0;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background:
-        radial-gradient(1100px 680px at 15% 6%, rgba(120, 70, 255, 0.55), transparent 60%),
-        radial-gradient(900px 540px at 92% 84%, rgba(0, 205, 185, 0.32), transparent 58%),
-        radial-gradient(820px 560px at 72% 18%, rgba(255, 79, 216, 0.18), transparent 60%),
-        linear-gradient(160deg, var(--bgA) 0%, var(--bgB) 55%, #050b18 100%);
+    .container {
+      text-align: center;
+      padding: 20px;
+      max-width: 600px;
+      width: 100%;
     }
 
-    .panel{
-      width:min(760px, 92vw);
-      padding: 28px 22px 26px 22px;
-      border-radius: var(--radius);
-      background: var(--panel);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      position:relative;
+    .ask-title {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      color: #3a7bd5;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 30px;
+      line-height: 1.2;
     }
 
-    h1{
-      margin: 0 0 18px 0;
-      text-align:center;
-      font-size: clamp(28px, 4.2vw, 44px);
-      font-weight: 900;
-      letter-spacing: 0.2px;
-      line-height: 1.08;
-      text-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    .gif-container {
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
     }
 
-    .media{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin: 0 0 22px 0;
-    }
-
-    .media img{
-      width: min(520px, 86vw);
+    .gif-container img {
+      max-width: 300px;
+      width: 100%;
       height: auto;
-      border-radius: 22px;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.35);
-      background: rgba(255,255,255,0.02);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(58, 123, 213, 0.15);
+      background: rgba(255,255,255,0.5);
     }
 
-    .stage{
-      width: min(520px, 86vw);
-      height: 98px;
-      margin: 0 auto;
-      position:relative;
-      user-select:none;
+    .stage {
+      min-height: 120px;
+      padding: 20px;
+      position: relative;
       touch-action: none;
+      user-select: none;
     }
 
-    button{
+    .btn {
+      height: 52px;
+      min-width: 120px;
+      padding: 14px 40px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      border-radius: 12px;
       border: 0;
-      border-radius: 999px;
-      padding: 14px 22px;
-      font-size: 18px;
-      font-weight: 850;
-      white-space: nowrap;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-      position:absolute;
+      position: absolute;
       top: 50%;
       transform: translate(-50%, -50%);
+      white-space: nowrap;
     }
 
-    .yesBtn{
-      left: 38%;
-      cursor:pointer;
-      color: rgba(18, 6, 22, 0.95);
-      background: linear-gradient(135deg, var(--yes1), var(--yes2));
-      filter: saturate(1.05);
-      transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
-      box-shadow:
-        0 16px 36px rgba(0,0,0,0.38),
-        0 0 0 1px rgba(255,255,255,0.18) inset,
-        0 0 26px rgba(255,79,216,0.25);
-      animation: breathe 2.0s ease-in-out infinite;
+    .yesBtn {
+      background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(33, 147, 176, 0.4);
+      cursor: pointer;
+      transition: transform .14s ease, filter .14s ease;
     }
 
-    .yesBtn:hover{
-      transform: translate(-50%, -50%) scale(1.08);
-      filter: brightness(1.05) saturate(1.15);
-      box-shadow:
-        0 18px 42px rgba(0,0,0,0.42),
-        0 0 0 1px rgba(255,255,255,0.22) inset,
-        0 0 34px rgba(255,184,79,0.22),
-        0 0 34px rgba(255,79,216,0.22);
+    .yesBtn:hover {
+      transform: translate(-50%, -50%) scale(1.06);
+      filter: brightness(1.03);
     }
 
-    @keyframes breathe{
-      0%{ transform: translate(-50%, -50%) scale(1.00); }
-      50%{ transform: translate(-50%, -50%) scale(1.04); }
-      100%{ transform: translate(-50%, -50%) scale(1.00); }
-    }
-
-    .noBtn{
-      left: 62%;
+    .noBtn {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+      color: #666666;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
       cursor: not-allowed;
-      color: rgba(255,255,255,0.86);
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow:
-        0 14px 34px rgba(0,0,0,0.35),
-        0 0 0 1px rgba(255,255,255,0.08) inset;
       pointer-events: none;
     }
 
-    .hidden{ display:none; }
+    .hidden { display: none; }
+
+    .success-text {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      color: #3a7bd5;
+      margin-bottom: 30px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .success-text span {
+      display: block;
+    }
+
+    .success-text .ura {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      margin-bottom: 10px;
+    }
 
     .puff{
       position: fixed;
@@ -146,7 +117,6 @@
       z-index: 50;
       pointer-events:none;
       font-size: 20px;
-      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.35));
       --rot: 0deg;
       --dx1: 0px;
       --dy1: 0px;
@@ -155,6 +125,7 @@
       animation: puffOut .62s ease forwards;
       transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.9);
       opacity: 0;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.20));
     }
 
     @keyframes puffOut{
@@ -179,36 +150,37 @@
       pointer-events: none;
       display:none;
     }
-    canvas.confetti.on{
-      display:block;
-    }
+    canvas.confetti.on{ display:block; }
 
     @media (prefers-reduced-motion: reduce){
-      .yesBtn{ animation:none; }
       .yesBtn{ transition:none; }
     }
   </style>
 </head>
-<body>
-  <div class="panel">
-    <div id="viewAsk">
-      <h1>Ты будешь моим Мурмуром?</h1>
 
-      <div class="media">
-        <img id="askGif" src="ask.gif" alt="Котёнок" loading="eager" />
+<body>
+  <div class="container">
+    <div id="viewAsk">
+      <div class="ask-title">Ты будешь моим Мурмуром?</div>
+
+      <div class="gif-container">
+        <img src="ask.gif" alt="Котёнок" loading="eager" />
       </div>
 
       <div class="stage" id="stage">
-        <button class="yesBtn" id="yesBtn">Да 💘</button>
-        <button class="noBtn" id="noBtn" aria-disabled="true" tabindex="-1">Нет</button>
+        <button class="btn yesBtn" id="yesBtn">Да 💘</button>
+        <button class="btn noBtn" id="noBtn" aria-disabled="true" tabindex="-1">Нет</button>
       </div>
     </div>
 
     <div id="viewYes" class="hidden">
-      <h1>Ура!<br>Мой любимый ласковый Мурмур!</h1>
+      <div class="success-text">
+        <span class="ura">Ура!</span>
+        <span>Мой любимый ласковый Мурмур!</span>
+      </div>
 
-      <div class="media">
-        <img id="celebrateGif" src="celebrate.gif" alt="Празднуем" loading="eager" />
+      <div class="gif-container">
+        <img src="celebrate.gif" alt="Празднование" loading="eager" />
       </div>
     </div>
   </div>
@@ -247,12 +219,13 @@
       return { left:r.left-pad, right:r.right+pad, top:r.top-pad, bottom:r.bottom+pad };
     }
 
+    // Поведение "Нет" (как было у меня)
     const NO = {
       safeDist: 120,
       step: 78,
       jitter: 16,
-      margin: 10,
-      yesPad: 22,
+      margin: 20,          // соответствует stage padding
+      yesPad: 24,
       historyN: 10,
       historyMinSep: 72,
       samplesNear: 120,
@@ -261,6 +234,7 @@
 
     let noPos = { x: 0, y: 0 };
     let history = [];
+    let rafId = null;
 
     function stageRect(){
       return stage.getBoundingClientRect();
@@ -397,6 +371,7 @@
       const vy = newClient.y - oldClient.y;
       const len = Math.hypot(vx, vy) || 1;
 
+      // Пук летит в сторону, противоположную движению кнопки
       const ux = -(vx / len);
       const uy = -(vy / len);
 
@@ -421,8 +396,6 @@
       setTimeout(() => el.remove(), 700);
     }
 
-    let rafId = null;
-
     function maybeEvade(clientX, clientY){
       const sr = stageRect();
       const cursor = { x: clientX - sr.left, y: clientY - sr.top };
@@ -431,7 +404,6 @@
       if (d >= NO.safeDist) return;
 
       const oldC = getNoClientCenter();
-
       const next = pickNewNoPos(clientX, clientY);
 
       setNoPos(next.x, next.y);
@@ -456,25 +428,42 @@
     stage.addEventListener("pointermove", onPointerMove, { passive: true });
     stage.addEventListener("pointerdown", (e) => maybeEvade(e.clientX, e.clientY), { passive: true });
 
-    function initNo(){
+    // Стартовое расположение кнопок: по центру в ряд с gap 16px
+    function initButtons(){
       const sr = stageRect();
-      const noR = noBtn.getBoundingClientRect();
-      const x = sr.width * 0.62;
-      const y = sr.height * 0.50;
+
+      const yesW = yesBtn.getBoundingClientRect().width || 120;
+      const yesH = yesBtn.getBoundingClientRect().height || 52;
+
+      const noW = noBtn.getBoundingClientRect().width || 120;
+      const noH = noBtn.getBoundingClientRect().height || 52;
+
+      const gap = 16;
+
+      const centerX = sr.width / 2;
+      const centerY = sr.height / 2;
+
+      const yesX = centerX - (yesW/2 + gap/2);
+      const noX  = centerX + (noW/2 + gap/2);
+
+      yesBtn.style.left = yesX + "px";
+      yesBtn.style.top = centerY + "px";
+      yesBtn.style.transform = "translate(-50%, -50%)";
+
       setNoPos(
-        clamp(x, NO.margin + noR.width/2, sr.width - NO.margin - noR.width/2),
-        clamp(y, NO.margin + noR.height/2, sr.height - NO.margin - noR.height/2)
+        clamp(noX, NO.margin + noW/2, sr.width - NO.margin - noW/2),
+        clamp(centerY, NO.margin + noH/2, sr.height - NO.margin - noH/2)
       );
+
       history = [{ x: noPos.x, y: noPos.y }];
     }
 
     window.addEventListener("resize", () => {
-      initNo();
+      initButtons();
       resizeConfetti();
     }, { passive: true });
 
-    initNo();
-
+    // Конфетти (как было у меня)
     function resizeConfetti(){
       const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
       confettiCanvas.width = Math.floor(window.innerWidth * dpr);
@@ -485,11 +474,7 @@
     }
     resizeConfetti();
 
-    const confetti = {
-      on: false,
-      parts: [],
-      t0: 0
-    };
+    const confetti = { on: false, parts: [], t0: 0 };
 
     function rand(a,b){ return a + Math.random() * (b-a); }
     function pick(arr){ return arr[(Math.random()*arr.length)|0]; }
@@ -497,7 +482,7 @@
     function makePart(x, y, mode){
       const shape = pick(["rect","circle","ribbon"]);
       const hue = Math.floor(rand(0, 360));
-      const color = `hsla(${hue}, 95%, 70%, 0.95)`;
+      const color = `hsla(${hue}, 95%, 60%, 0.95)`;
 
       const size = shape === "ribbon" ? rand(10, 18) : rand(6, 14);
       const w = shape === "circle" ? size : size * rand(0.6, 1.4);
@@ -546,7 +531,6 @@
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rot);
-
       ctx.fillStyle = p.color;
 
       if (p.shape === "circle"){
@@ -634,6 +618,9 @@
 
       requestAnimationFrame(tickConfetti);
     }
+
+    // Инициализация после того как кнопки измерились
+    requestAnimationFrame(() => initButtons());
 
     yesBtn.addEventListener("click", () => {
       startConfetti();
