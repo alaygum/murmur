@@ -1,472 +1,646 @@
-<html lang="ru">                                                                                                      
-  <head>                                                                                                                
-      <meta charset="UTF-8">                                                                                            
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">                                            
-      <title>Мурмур</title>                                                                                             
-      <style>                                                                                                           
-          * {                                                                                                           
-              margin: 0;                                                                                                
-              padding: 0;                                                                                               
-              box-sizing: border-box;                                                                                   
-          }                                                                                                             
-                                                                                                                        
-          body {                                                                                                        
-              font-family: 'Futura', 'Century Gothic', 'Arial', sans-serif;                                             
-              min-height: 100vh;                                                                                        
-              display: flex;                                                                                            
-              justify-content: center;                                                                                  
-              align-items: center;                                                                                      
-              background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #d4ecff 100%);                               
-              overflow: hidden;                                                                                         
-          }                                                                                                             
-                                                                                                                        
-          .container {                                                                                                  
-              text-align: center;                                                                                       
-              padding: 20px;                                                                                            
-              max-width: 600px;                                                                                         
-              width: 100%;                                                                                              
-          }                                                                                                             
-                                                                                                                        
-          h1 {                                                                                                          
-              font-size: clamp(1.8rem, 5vw, 2.5rem);                                                                    
-              color: #3a7bd5;                                                                                           
-              margin-bottom: 30px;                                                                                      
-              font-weight: 600;                                                                                         
-              letter-spacing: 0.02em;                                                                                   
-          }                                                                                                             
-                                                                                                                        
-          .gif-container {                                                                                              
-              margin-bottom: 30px;                                                                                      
-          }                                                                                                             
-                                                                                                                        
-          .gif-container img {                                                                                          
-              max-width: 300px;                                                                                         
-              width: 100%;                                                                                              
-              height: auto;                                                                                             
-              border-radius: 16px;                                                                                      
-              box-shadow: 0 8px 32px rgba(58, 123, 213, 0.15);                                                          
-          }                                                                                                             
-                                                                                                                        
-          .stage {                                                                                                      
-              position: relative;                                                                                       
-              width: 100%;                                                                                              
-              min-height: 120px;                                                                                        
-              display: flex;                                                                                            
-              justify-content: center;                                                                                  
-              align-items: flex-start;                                                                                  
-              padding: 20px;                                                                                            
-          }                                                                                                             
-                                                                                                                        
-          .buttons-wrapper {                                                                                            
-              display: flex;                                                                                            
-              gap: 16px;                                                                                                
-              align-items: center;                                                                                      
-              justify-content: center;                                                                                  
-          }                                                                                                             
-                                                                                                                        
-          .btn {                                                                                                        
-              padding: 14px 40px;                                                                                       
-              font-size: 1.1rem;                                                                                        
-              font-family: inherit;                                                                                     
-              border: none;                                                                                             
-              border-radius: 12px;                                                                                      
-              cursor: pointer;                                                                                          
-              font-weight: 500;                                                                                         
-              transition: transform 0.2s ease, box-shadow 0.2s ease;                                                    
-              min-width: 120px;                                                                                         
-              height: 52px;                                                                                             
-          }                                                                                                             
-                                                                                                                        
-          .btn-yes {                                                                                                    
-              background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);                                            
-              color: white;                                                                                             
-              box-shadow: 0 4px 20px rgba(33, 147, 176, 0.4);                                                           
-          }                                                                                                             
-                                                                                                                        
-          .btn-yes:hover {                                                                                              
-              transform: scale(1.08);                                                                                   
-              box-shadow: 0 6px 28px rgba(33, 147, 176, 0.55);                                                          
-          }                                                                                                             
-                                                                                                                        
-          .btn-yes:active {                                                                                             
-              transform: scale(1.04);                                                                                   
-          }                                                                                                             
-                                                                                                                        
-          .btn-no {                                                                                                     
-              position: absolute;                                                                                       
-              background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);                                            
-              color: #666;                                                                                              
-              box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);                                                                
-              user-select: none;                                                                                        
-              pointer-events: auto;                                                                                     
-          }                                                                                                             
-                                                                                                                        
-          .screen {                                                                                                     
-              display: none;                                                                                            
-          }                                                                                                             
-                                                                                                                        
-          .screen.active {                                                                                              
-              display: block;                                                                                           
-          }                                                                                                             
-                                                                                                                        
-          .success-text {                                                                                               
-              font-size: clamp(1.5rem, 4vw, 2rem);                                                                      
-              color: #3a7bd5;                                                                                           
-              margin-bottom: 30px;                                                                                      
-              line-height: 1.5;                                                                                         
-          }                                                                                                             
-                                                                                                                        
-          .success-text span {                                                                                          
-              display: block;                                                                                           
-          }                                                                                                             
-                                                                                                                        
-          .success-text .ura {                                                                                          
-              font-size: clamp(2rem, 5vw, 2.8rem);                                                                      
-              margin-bottom: 10px;                                                                                      
-          }                                                                                                             
-                                                                                                                        
-          .puk {                                                                                                        
-              position: absolute;                                                                                       
-              font-size: 24px;                                                                                          
-              pointer-events: none;                                                                                     
-              z-index: 100;                                                                                             
-              opacity: 0;                                                                                               
-          }                                                                                                             
-                                                                                                                        
-          .puk.animate {                                                                                                
-              animation: pukAnim 0.5s ease-out forwards;                                                                
-          }                                                                                                             
-                                                                                                                        
-          @keyframes pukAnim {                                                                                          
-              0% {                                                                                                      
-                  opacity: 1;                                                                                           
-                  transform: translate(0, 0) scale(1);                                                                  
-              }                                                                                                         
-              100% {                                                                                                    
-                  opacity: 0;                                                                                           
-                  transform: translate(var(--puk-x), var(--puk-y)) scale(0.5);                                          
-              }                                                                                                         
-          }                                                                                                             
-                                                                                                                        
-          .confetti {                                                                                                   
-              position: fixed;                                                                                          
-              width: 10px;                                                                                              
-              height: 10px;                                                                                             
-              pointer-events: none;                                                                                     
-              z-index: 1000;                                                                                            
-          }                                                                                                             
-                                                                                                                        
-          @media (prefers-reduced-motion: reduce) {                                                                     
-              .confetti {                                                                                               
-                  display: none !important;                                                                             
-              }                                                                                                         
-              .btn-yes:hover {                                                                                          
-                  transform: none;                                                                                      
-              }                                                                                                         
-          }                                                                                                             
-      </style>                                                                                                          
-  </head>                                                                                                               
-  <body>                                                                                                                
-      <div class="container">                                                                                           
-          <div id="askScreen" class="screen active">                                                                    
-              <h1>Ты будешь моим Мурмуром?</h1>                                                                         
-              <div class="gif-container">                                                                               
-                  <img src="ask.gif" alt="Милый котик">                                                                 
-              </div>                                                                                                    
-              <div class="stage" id="stage">                                                                            
-                  <div class="buttons-wrapper">                                                                         
-                      <button class="btn btn-yes" id="btnYes">Да</button>                                               
-                  </div>                                                                                                
-                  <button class="btn btn-no" id="btnNo" aria-disabled="true" tabindex="-1">Нет</button>                 
-              </div>                                                                                                    
-          </div>                                                                                                        
-                                                                                                                        
-          <div id="successScreen" class="screen">                                                                       
-              <div class="success-text">                                                                                
-                  <span class="ura">Ура!</span>                                                                         
-                  <span>Мой любимый ласковый Мурмур!</span>                                                             
-              </div>                                                                                                    
-              <div class="gif-container">                                                                               
-                  <img src="celebrate.gif" alt="Празднование">                                                          
-              </div>                                                                                                    
-          </div>                                                                                                        
-      </div>                                                                                                            
-                                                                                                                        
-      <script>                                                                                                          
-          (function() {                                                                                                 
-              const SAFE_DIST = 80;                                                                                     
-              const STEP = 50;                                                                                          
-              const HISTORY_SIZE = 5;                                                                                   
-              const YES_PADDING = 30;                                                                                   
-              const CANDIDATES = 8;                                                                                     
-                                                                                                                        
-              const stage = document.getElementById('stage');                                                           
-              const btnYes = document.getElementById('btnYes');                                                         
-              const btnNo = document.getElementById('btnNo');                                                           
-              const askScreen = document.getElementById('askScreen');                                                   
-              const successScreen = document.getElementById('successScreen');                                           
-                                                                                                                        
-              let positionHistory = [];                                                                                 
-              let noPos = { x: 0, y: 0 };                                                                               
-              let isInitialized = false;                                                                                
-                                                                                                                        
-              function initNoPosition() {                                                                               
-                  const stageRect = stage.getBoundingClientRect();                                                      
-                  const yesRect = btnYes.getBoundingClientRect();                                                       
-                  const noRect = btnNo.getBoundingClientRect();                                                         
-                                                                                                                        
-                  const initialX = (yesRect.right - stageRect.left) + 16;                                               
-                  const initialY = (yesRect.top - stageRect.top) + (yesRect.height / 2) - (noRect.height / 2);          
-                                                                                                                        
-                  noPos = { x: initialX, y: initialY };                                                                 
-                  applyPosition();                                                                                      
-                  isInitialized = true;                                                                                 
-              }                                                                                                         
-                                                                                                                        
-              function applyPosition() {                                                                                
-                  btnNo.style.left = noPos.x + 'px';                                                                    
-                  btnNo.style.top = noPos.y + 'px';                                                                     
-              }                                                                                                         
-                                                                                                                        
-              function getYesForbiddenZone() {                                                                          
-                  const stageRect = stage.getBoundingClientRect();                                                      
-                  const yesRect = btnYes.getBoundingClientRect();                                                       
-                  return {                                                                                              
-                      left: (yesRect.left - stageRect.left) - YES_PADDING,                                              
-                      right: (yesRect.right - stageRect.left) + YES_PADDING,                                            
-                      top: (yesRect.top - stageRect.top) - YES_PADDING,                                                 
-                      bottom: (yesRect.bottom - stageRect.top) + YES_PADDING                                            
-                  };                                                                                                    
-              }                                                                                                         
-                                                                                                                        
-              function isInYesZone(x, y, btnWidth, btnHeight) {                                                         
-                  const zone = getYesForbiddenZone();                                                                   
-                  const btnRight = x + btnWidth;                                                                        
-                  const btnBottom = y + btnHeight;                                                                      
-                  return !(x > zone.right || btnRight < zone.left || y > zone.bottom || btnBottom < zone.top);          
-              }                                                                                                         
-                                                                                                                        
-              function isValidPosition(x, y, btnWidth, btnHeight) {                                                     
-                  const stageRect = stage.getBoundingClientRect();                                                      
-                  const maxX = stageRect.width - btnWidth - 10;                                                         
-                  const maxY = stageRect.height - btnHeight - 10;                                                       
-                                                                                                                        
-                  if (x < 10 || x > maxX || y < 10 || y > maxY) return false;                                           
-                  if (isInYesZone(x, y, btnWidth, btnHeight)) return false;                                             
-                                                                                                                        
-                  return true;                                                                                          
-              }                                                                                                         
-                                                                                                                        
-              function isTooCloseToHistory(x, y) {                                                                      
-                  for (const pos of positionHistory) {                                                                  
-                      const dist = Math.sqrt((x - pos.x) ** 2 + (y - pos.y) ** 2);                                      
-                      if (dist < STEP * 0.6) return true;                                                               
-                  }                                                                                                     
-                  return false;                                                                                         
-              }                                                                                                         
-                                                                                                                        
-              function addToHistory(x, y) {                                                                             
-                  positionHistory.push({ x, y });                                                                       
-                  if (positionHistory.length > HISTORY_SIZE) {                                                          
-                      positionHistory.shift();                                                                          
-                  }                                                                                                     
-              }                                                                                                         
-                                                                                                                        
-              function createPuk(oldX, oldY, newX, newY) {                                                              
-                  const dx = newX - oldX;                                                                               
-                  const dy = newY - oldY;                                                                               
-                                                                                                                        
-                  const pukDx = -dx * 0.8;                                                                              
-                  const pukDy = -dy * 0.8;                                                                              
-                                                                                                                        
-                  const puk = document.createElement('div');                                                            
-                  puk.className = 'puk';                                                                                
-                  puk.textContent = '💨';                                                                               
-                                                                                                                        
-                  const angle = Math.atan2(-dy, -dx) * (180 / Math.PI);                                                 
-                  puk.style.transform = `rotate(${angle - 180}deg)`;                                                    
-                                                                                                                        
-                  puk.style.setProperty('--puk-x', pukDx + 'px');                                                       
-                  puk.style.setProperty('--puk-y', pukDy + 'px');                                                       
-                                                                                                                        
-                  const noRect = btnNo.getBoundingClientRect();                                                         
-                  const stageRect = stage.getBoundingClientRect();                                                      
-                                                                                                                        
-                  puk.style.left = (noRect.left - stageRect.left + noRect.width / 2) + 'px';                            
-                  puk.style.top = (noRect.top - stageRect.top + noRect.height / 2) + 'px';                              
-                                                                                                                        
-                  stage.appendChild(puk);                                                                               
-                                                                                                                        
-                  requestAnimationFrame(() => {                                                                         
-                      puk.classList.add('animate');                                                                     
-                  });                                                                                                   
-                                                                                                                        
-                  setTimeout(() => {                                                                                    
-                      puk.remove();                                                                                     
-                  }, 500);                                                                                              
-              }                                                                                                         
-                                                                                                                        
-              function moveAway(cursorX, cursorY) {                                                                     
-                  const stageRect = stage.getBoundingClientRect();                                                      
-                  const noRect = btnNo.getBoundingClientRect();                                                         
-                                                                                                                        
-                  const noCenterX = noPos.x + noRect.width / 2;                                                         
-                  const noCenterY = noPos.y + noRect.height / 2;                                                        
-                  const cursorRelX = cursorX - stageRect.left;                                                          
-                  const cursorRelY = cursorY - stageRect.top;                                                           
-                                                                                                                        
-                  let dx = noCenterX - cursorRelX;                                                                      
-                  let dy = noCenterY - cursorRelY;                                                                      
-                  const dist = Math.sqrt(dx * dx + dy * dy);                                                            
-                                                                                                                        
-                  if (dist === 0) {                                                                                     
-                      dx = 1;                                                                                           
-                      dy = 0;                                                                                           
-                  } else {                                                                                              
-                      dx /= dist;                                                                                       
-                      dy /= dist;                                                                                       
-                  }                                                                                                     
-                                                                                                                        
-                  let bestCandidate = null;                                                                             
-                  let bestScore = -Infinity;                                                                            
-                                                                                                                        
-                  for (let i = 0; i < CANDIDATES; i++) {                                                                
-                      const angleOffset = (Math.random() - 0.5) * Math.PI * 0.8;                                        
-                      const cos = Math.cos(angleOffset);                                                                
-                      const sin = Math.sin(angleOffset);                                                                
-                      const newDx = dx * cos - dy * sin;                                                                
-                      const newDy = dx * sin + dy * cos;                                                                
-                                                                                                                        
-                      const stepSize = STEP + Math.random() * 20;                                                       
-                      const candidateX = noPos.x + newDx * stepSize;                                                    
-                      const candidateY = noPos.y + newDy * stepSize;                                                    
-                                                                                                                        
-                      if (!isValidPosition(candidateX, candidateY, noRect.width, noRect.height)) continue;              
-                      if (isTooCloseToHistory(candidateX, candidateY)) continue;                                        
-                                                                                                                        
-                      const distFromCursor = Math.sqrt(                                                                 
-                          (candidateX + noRect.width / 2 - cursorRelX) ** 2 +                                           
-                          (candidateY + noRect.height / 2 - cursorRelY) ** 2                                            
-                      );                                                                                                
-                                                                                                                        
-                      const historyPenalty = positionHistory.reduce((sum, pos) => {                                     
-                          const d = Math.sqrt((candidateX - pos.x) ** 2 + (candidateY - pos.y) ** 2);                   
-                          return sum + Math.max(0, STEP - d);                                                           
-                      }, 0);                                                                                            
-                                                                                                                        
-                      const score = distFromCursor - historyPenalty * 0.5;                                              
-                                                                                                                        
-                      if (score > bestScore) {                                                                          
-                          bestScore = score;                                                                            
-                          bestCandidate = { x: candidateX, y: candidateY };                                             
-                      }                                                                                                 
-                  }                                                                                                     
-                                                                                                                        
-                  if (bestCandidate) {                                                                                  
-                      const oldX = noPos.x;                                                                             
-                      const oldY = noPos.y;                                                                             
-                                                                                                                        
-                      noPos = bestCandidate;                                                                            
-                      addToHistory(noPos.x, noPos.y);                                                                   
-                      applyPosition();                                                                                  
-                                                                                                                        
-                      createPuk(oldX, oldY, noPos.x, noPos.y);                                                          
-                  }                                                                                                     
-              }                                                                                                         
-                                                                                                                        
-              function checkDistance(e) {                                                                               
-                  if (!isInitialized) return;                                                                           
-                                                                                                                        
-                  const noRect = btnNo.getBoundingClientRect();                                                         
-                  const noCenterX = noRect.left + noRect.width / 2;                                                     
-                  const noCenterY = noRect.top + noRect.height / 2;                                                     
-                                                                                                                        
-                  const dist = Math.sqrt(                                                                               
-                      (e.clientX - noCenterX) ** 2 +                                                                    
-                      (e.clientY - noCenterY) ** 2                                                                      
-                  );                                                                                                    
-                                                                                                                        
-                  if (dist < SAFE_DIST) {                                                                               
-                      moveAway(e.clientX, e.clientY);                                                                   
-                  }                                                                                                     
-              }                                                                                                         
-                                                                                                                        
-              document.addEventListener('mousemove', checkDistance);                                                    
-              document.addEventListener('touchmove', (e) => {                                                           
-                  if (e.touches.length > 0) {                                                                           
-                      checkDistance({                                                                                   
-                          clientX: e.touches[0].clientX,                                                                
-                          clientY: e.touches[0].clientY                                                                 
-                      });                                                                                               
-                  }                                                                                                     
-              });                                                                                                       
-                                                                                                                        
-              btnNo.addEventListener('mouseenter', (e) => {                                                             
-                  moveAway(e.clientX, e.clientY);                                                                       
-              });                                                                                                       
-                                                                                                                        
-              btnNo.addEventListener('click', (e) => {                                                                  
-                  e.preventDefault();                                                                                   
-                  moveAway(e.clientX, e.clientY);                                                                       
-              });                                                                                                       
-                                                                                                                        
-              function createConfetti() {                                                                               
-                  const colors = ['#6dd5ed', '#2193b0', '#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff'];                    
-                  const confettiCount = 150;                                                                            
-                                                                                                                        
-                  for (let i = 0; i < confettiCount; i++) {                                                             
-                      const confetti = document.createElement('div');                                                   
-                      confetti.className = 'confetti';                                                                  
-                      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];               
-                      confetti.style.left = Math.random() * 100 + 'vw';                                                 
-                      confetti.style.top = '-10px';                                                                     
-                      confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';                                  
-                      confetti.style.width = (Math.random() * 8 + 5) + 'px';                                            
-                      confetti.style.height = (Math.random() * 8 + 5) + 'px';                                           
-                                                                                                                        
-                      document.body.appendChild(confetti);                                                              
-                                                                                                                        
-                      const duration = Math.random() * 2000 + 2000;                                                     
-                      const xEnd = (Math.random() - 0.5) * 200;                                                         
-                      const rotation = Math.random() * 720;                                                             
-                                                                                                                        
-                      confetti.animate([                                                                                
-                          {                                                                                             
-                              transform: 'translateY(0) translateX(0) rotate(0deg)',                                    
-                              opacity: 1                                                                                
-                          },                                                                                            
-                          {                                                                                             
-                              transform: `translateY(100vh) translateX(${xEnd}px) rotate(${rotation}deg)`,              
-                              opacity: 0.7                                                                              
-                          }                                                                                             
-                      ], {                                                                                              
-                          duration: duration,                                                                           
-                          easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'                                                
-                      }).onfinish = () => confetti.remove();                                                            
-                  }                                                                                                     
-              }                                                                                                         
-                                                                                                                        
-              btnYes.addEventListener('click', () => {                                                                  
-                  askScreen.classList.remove('active');                                                                 
-                  successScreen.classList.add('active');                                                                
-                                                                                                                        
-                  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;           
-                  if (!prefersReducedMotion) {                                                                          
-                      createConfetti();                                                                                 
-                  }                                                                                                     
-              });                                                                                                       
-                                                                                                                        
-              window.addEventListener('load', () => {                                                                   
-                  setTimeout(initNoPosition, 100);                                                                      
-              });                                                                                                       
-                                                                                                                        
-              window.addEventListener('resize', () => {                                                                 
-                  if (isInitialized) {                                                                                  
-                      initNoPosition();                                                                                 
-                      positionHistory = [];                                                                             
-                  }                                                                                                     
-              });                                                                                                       
-          })();                                                                                                         
-      </script>                                                                                                         
-  </body>                                                                                                               
-  </html>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Мурмур</title>
+  <style>
+    :root{
+      --bgA:#050612;
+      --bgB:#070a1a;
+      --panel: rgba(13, 18, 42, 0.72);
+      --border: rgba(255,255,255,0.10);
+      --text: rgba(255,255,255,0.92);
+
+      --yes1:#ff4fd8;
+      --yes2:#ffb84f;
+
+      --shadow: 0 18px 50px rgba(0,0,0,0.45);
+      --radius: 26px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1100px 680px at 15% 6%, rgba(120, 70, 255, 0.55), transparent 60%),
+        radial-gradient(900px 540px at 92% 84%, rgba(0, 205, 185, 0.32), transparent 58%),
+        radial-gradient(820px 560px at 72% 18%, rgba(255, 79, 216, 0.18), transparent 60%),
+        linear-gradient(160deg, var(--bgA) 0%, var(--bgB) 55%, #050b18 100%);
+    }
+
+    .panel{
+      width:min(760px, 92vw);
+      padding: 28px 22px 26px 22px;
+      border-radius: var(--radius);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      position:relative;
+    }
+
+    h1{
+      margin: 0 0 18px 0;
+      text-align:center;
+      font-size: clamp(28px, 4.2vw, 44px);
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      line-height: 1.08;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .media{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin: 0 0 22px 0;
+    }
+
+    .media img{
+      width: min(520px, 86vw);
+      height: auto;
+      border-radius: 22px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .stage{
+      width: min(520px, 86vw);
+      height: 98px;
+      margin: 0 auto;
+      position:relative;
+      user-select:none;
+      touch-action: none;
+    }
+
+    button{
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 18px;
+      font-weight: 850;
+      white-space: nowrap;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      position:absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .yesBtn{
+      left: 38%;
+      cursor:pointer;
+      color: rgba(18, 6, 22, 0.95);
+      background: linear-gradient(135deg, var(--yes1), var(--yes2));
+      filter: saturate(1.05);
+      transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
+      box-shadow:
+        0 16px 36px rgba(0,0,0,0.38),
+        0 0 0 1px rgba(255,255,255,0.18) inset,
+        0 0 26px rgba(255,79,216,0.25);
+      animation: breathe 2.0s ease-in-out infinite;
+    }
+
+    .yesBtn:hover{
+      transform: translate(-50%, -50%) scale(1.08);
+      filter: brightness(1.05) saturate(1.15);
+      box-shadow:
+        0 18px 42px rgba(0,0,0,0.42),
+        0 0 0 1px rgba(255,255,255,0.22) inset,
+        0 0 34px rgba(255,184,79,0.22),
+        0 0 34px rgba(255,79,216,0.22);
+    }
+
+    @keyframes breathe{
+      0%{ transform: translate(-50%, -50%) scale(1.00); }
+      50%{ transform: translate(-50%, -50%) scale(1.04); }
+      100%{ transform: translate(-50%, -50%) scale(1.00); }
+    }
+
+    .noBtn{
+      left: 62%;
+      cursor: not-allowed;
+      color: rgba(255,255,255,0.86);
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 14px 34px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(255,255,255,0.08) inset;
+      pointer-events: none;
+    }
+
+    .hidden{ display:none; }
+
+    .puff{
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 50;
+      pointer-events:none;
+      font-size: 20px;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.35));
+      --rot: 0deg;
+      --dx1: 0px;
+      --dy1: 0px;
+      --dx2: 0px;
+      --dy2: 0px;
+      animation: puffOut .62s ease forwards;
+      transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.9);
+      opacity: 0;
+    }
+
+    @keyframes puffOut{
+      0%{
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.7);
+      }
+      16%{
+        opacity: 1;
+        transform: translate(calc(-50% + var(--dx1)), calc(-50% + var(--dy1))) rotate(var(--rot)) scale(1.0);
+      }
+      100%{
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx2)), calc(-50% + var(--dy2))) rotate(var(--rot)) scale(1.25);
+      }
+    }
+
+    canvas.confetti{
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      pointer-events: none;
+      display:none;
+    }
+    canvas.confetti.on{
+      display:block;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .yesBtn{ animation:none; }
+      .yesBtn{ transition:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <div id="viewAsk">
+      <h1>Ты будешь моим Мурмуром?</h1>
+
+      <div class="media">
+        <img id="askGif" src="ask.gif" alt="Котёнок" loading="eager" />
+      </div>
+
+      <div class="stage" id="stage">
+        <button class="yesBtn" id="yesBtn">Да 💘</button>
+        <button class="noBtn" id="noBtn" aria-disabled="true" tabindex="-1">Нет</button>
+      </div>
+    </div>
+
+    <div id="viewYes" class="hidden">
+      <h1>Ура!<br>Мой любимый ласковый Мурмур!</h1>
+
+      <div class="media">
+        <img id="celebrateGif" src="celebrate.gif" alt="Празднуем" loading="eager" />
+      </div>
+    </div>
+  </div>
+
+  <canvas class="confetti" id="confetti"></canvas>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const stage = document.getElementById("stage");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+
+    const viewAsk = document.getElementById("viewAsk");
+    const viewYes = document.getElementById("viewYes");
+
+    const confettiCanvas = document.getElementById("confetti");
+    const ctx = confettiCanvas.getContext("2d");
+
+    function preload(src){
+      const img = new Image();
+      img.src = src;
+    }
+    preload("ask.gif");
+    preload("celebrate.gif");
+
+    function clamp(v, a, b){
+      return Math.max(a, Math.min(b, v));
+    }
+
+    function rectsOverlap(a, b){
+      return !(b.left > a.right || b.right < a.left || b.top > a.bottom || b.bottom < a.top);
+    }
+
+    function inflateRect(r, pad){
+      return { left:r.left-pad, right:r.right+pad, top:r.top-pad, bottom:r.bottom+pad };
+    }
+
+    const NO = {
+      safeDist: 120,
+      step: 78,
+      jitter: 16,
+      margin: 10,
+      yesPad: 22,
+      historyN: 10,
+      historyMinSep: 72,
+      samplesNear: 120,
+      samplesGlobal: 100
+    };
+
+    let noPos = { x: 0, y: 0 };
+    let history = [];
+
+    function stageRect(){
+      return stage.getBoundingClientRect();
+    }
+
+    function setNoPos(x, y){
+      noPos.x = x;
+      noPos.y = y;
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+      noBtn.style.transform = "translate(-50%, -50%)";
+    }
+
+    function getNoClientCenter(){
+      const r = noBtn.getBoundingClientRect();
+      return { x: r.left + r.width/2, y: r.top + r.height/2, r };
+    }
+
+    function isFarFromHistory(p){
+      for (const h of history){
+        const d = Math.hypot(p.x - h.x, p.y - h.y);
+        if (d < NO.historyMinSep) return false;
+      }
+      return true;
+    }
+
+    function pickNewNoPos(cursorClientX, cursorClientY){
+      const sr = stageRect();
+      const yesR = yesBtn.getBoundingClientRect();
+      const noR = noBtn.getBoundingClientRect();
+
+      const yesForbidden = inflateRect(yesR, NO.yesPad);
+
+      const minX = NO.margin + noR.width/2;
+      const maxX = sr.width - NO.margin - noR.width/2;
+      const minY = NO.margin + noR.height/2;
+      const maxY = sr.height - NO.margin - noR.height/2;
+
+      const cursor = { x: cursorClientX - sr.left, y: cursorClientY - sr.top };
+      const cur = { x: noPos.x, y: noPos.y };
+
+      const away = { x: cur.x - cursor.x, y: cur.y - cursor.y };
+      const awayLen = Math.hypot(away.x, away.y) || 1;
+      const u = { x: away.x / awayLen, y: away.y / awayLen };
+
+      function candidateToClientRect(p){
+        return {
+          left: sr.left + p.x - noR.width/2,
+          right: sr.left + p.x + noR.width/2,
+          top: sr.top + p.y - noR.height/2,
+          bottom: sr.top + p.y + noR.height/2
+        };
+      }
+
+      function ok(p){
+        const dCursor = Math.hypot(p.x - cursor.x, p.y - cursor.y);
+        if (dCursor < NO.safeDist) return false;
+
+        if (!isFarFromHistory(p)) return false;
+
+        if (p.x < minX || p.x > maxX || p.y < minY || p.y > maxY) return false;
+
+        const cand = candidateToClientRect(p);
+        if (rectsOverlap(cand, yesForbidden)) return false;
+
+        return true;
+      }
+
+      let best = null;
+
+      const tryCandidate = (p) => {
+        if (!ok(p)) return;
+
+        const dCursor = Math.hypot(p.x - cursor.x, p.y - cursor.y);
+
+        const yesCenter = {
+          x: (yesR.left + yesR.right)/2 - sr.left,
+          y: (yesR.top + yesR.bottom)/2 - sr.top
+        };
+        const dYes = Math.hypot(p.x - yesCenter.x, p.y - yesCenter.y);
+
+        const dMove = Math.hypot(p.x - cur.x, p.y - cur.y);
+
+        const score = dCursor * 1.0 + dYes * 0.35 - dMove * 0.55;
+
+        if (!best || score > best.score){
+          best = { x: p.x, y: p.y, score };
+        }
+      };
+
+      for (let i = 0; i < NO.samplesNear; i++){
+        const a = (Math.random() - 0.5) * 0.9;
+        const ca = Math.cos(a), sa = Math.sin(a);
+        const ru = { x: u.x * ca - u.y * sa, y: u.x * sa + u.y * ca };
+
+        const mag = NO.step + (Math.random() - 0.5) * 18;
+        const p = {
+          x: cur.x + ru.x * mag + (Math.random() - 0.5) * NO.jitter,
+          y: cur.y + ru.y * mag + (Math.random() - 0.5) * NO.jitter
+        };
+
+        p.x = clamp(p.x, minX, maxX);
+        p.y = clamp(p.y, minY, maxY);
+
+        tryCandidate(p);
+      }
+
+      for (let i = 0; i < NO.samplesGlobal; i++){
+        const p = {
+          x: minX + Math.random() * (maxX - minX),
+          y: minY + Math.random() * (maxY - minY)
+        };
+        tryCandidate(p);
+      }
+
+      if (best) return best;
+
+      const corners = [
+        { x: minX, y: minY },
+        { x: maxX, y: minY },
+        { x: minX, y: maxY },
+        { x: maxX, y: maxY }
+      ];
+      corners.sort((a,b) => {
+        const da = Math.hypot(a.x - cursor.x, a.y - cursor.y);
+        const db = Math.hypot(b.x - cursor.x, b.y - cursor.y);
+        return db - da;
+      });
+      return corners[0];
+    }
+
+    function spawnPuff(oldClient, newClient){
+      const vx = newClient.x - oldClient.x;
+      const vy = newClient.y - oldClient.y;
+      const len = Math.hypot(vx, vy) || 1;
+
+      const ux = -(vx / len);
+      const uy = -(vy / len);
+
+      const dx1 = ux * 10;
+      const dy1 = uy * 10;
+      const dx2 = ux * 34;
+      const dy2 = uy * 34;
+
+      const angle = Math.atan2(uy, ux) * 180 / Math.PI;
+
+      const el = document.createElement("div");
+      el.className = "puff";
+      el.textContent = "💨";
+      el.style.left = oldClient.x + "px";
+      el.style.top = oldClient.y + "px";
+      el.style.setProperty("--rot", angle + "deg");
+      el.style.setProperty("--dx1", dx1 + "px");
+      el.style.setProperty("--dy1", dy1 + "px");
+      el.style.setProperty("--dx2", dx2 + "px");
+      el.style.setProperty("--dy2", dy2 + "px");
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 700);
+    }
+
+    let rafId = null;
+
+    function maybeEvade(clientX, clientY){
+      const sr = stageRect();
+      const cursor = { x: clientX - sr.left, y: clientY - sr.top };
+
+      const d = Math.hypot(cursor.x - noPos.x, cursor.y - noPos.y);
+      if (d >= NO.safeDist) return;
+
+      const oldC = getNoClientCenter();
+
+      const next = pickNewNoPos(clientX, clientY);
+
+      setNoPos(next.x, next.y);
+
+      const newC = getNoClientCenter();
+      spawnPuff({ x: oldC.x, y: oldC.y }, { x: newC.x, y: newC.y });
+
+      history.unshift({ x: next.x, y: next.y });
+      history = history.slice(0, NO.historyN);
+    }
+
+    function onPointerMove(e){
+      if (rafId) return;
+      const x = e.clientX;
+      const y = e.clientY;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        maybeEvade(x, y);
+      });
+    }
+
+    stage.addEventListener("pointermove", onPointerMove, { passive: true });
+    stage.addEventListener("pointerdown", (e) => maybeEvade(e.clientX, e.clientY), { passive: true });
+
+    function initNo(){
+      const sr = stageRect();
+      const noR = noBtn.getBoundingClientRect();
+      const x = sr.width * 0.62;
+      const y = sr.height * 0.50;
+      setNoPos(
+        clamp(x, NO.margin + noR.width/2, sr.width - NO.margin - noR.width/2),
+        clamp(y, NO.margin + noR.height/2, sr.height - NO.margin - noR.height/2)
+      );
+      history = [{ x: noPos.x, y: noPos.y }];
+    }
+
+    window.addEventListener("resize", () => {
+      initNo();
+      resizeConfetti();
+    }, { passive: true });
+
+    initNo();
+
+    function resizeConfetti(){
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      confettiCanvas.width = Math.floor(window.innerWidth * dpr);
+      confettiCanvas.height = Math.floor(window.innerHeight * dpr);
+      confettiCanvas.style.width = window.innerWidth + "px";
+      confettiCanvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resizeConfetti();
+
+    const confetti = {
+      on: false,
+      parts: [],
+      t0: 0
+    };
+
+    function rand(a,b){ return a + Math.random() * (b-a); }
+    function pick(arr){ return arr[(Math.random()*arr.length)|0]; }
+
+    function makePart(x, y, mode){
+      const shape = pick(["rect","circle","ribbon"]);
+      const hue = Math.floor(rand(0, 360));
+      const color = `hsla(${hue}, 95%, 70%, 0.95)`;
+
+      const size = shape === "ribbon" ? rand(10, 18) : rand(6, 14);
+      const w = shape === "circle" ? size : size * rand(0.6, 1.4);
+      const h = shape === "circle" ? size : size * rand(0.8, 2.2);
+
+      let vx, vy;
+
+      if (mode === "burst"){
+        const a = rand(-Math.PI, 0);
+        const sp = rand(4.5, 10.5);
+        vx = Math.cos(a) * sp * rand(0.7, 1.2);
+        vy = Math.sin(a) * sp * rand(0.7, 1.2);
+      } else {
+        vx = rand(-1.2, 1.2);
+        vy = rand(2.8, 6.4);
+      }
+
+      return {
+        x, y,
+        vx, vy,
+        w, h,
+        shape,
+        color,
+        rot: rand(0, Math.PI*2),
+        vr: rand(-0.22, 0.22),
+        life: 0,
+        ttl: rand(1100, 1900),
+        swing: rand(0.6, 1.5),
+        sway: rand(0.8, 2.4)
+      };
+    }
+
+    function confettiBurst(cx, cy, n){
+      for (let i = 0; i < n; i++){
+        confetti.parts.push(makePart(cx + rand(-12, 12), cy + rand(-8, 8), "burst"));
+      }
+    }
+
+    function confettiRain(n){
+      for (let i = 0; i < n; i++){
+        confetti.parts.push(makePart(rand(0, window.innerWidth), rand(-30, -5), "rain"));
+      }
+    }
+
+    function drawPart(p){
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+
+      ctx.fillStyle = p.color;
+
+      if (p.shape === "circle"){
+        ctx.beginPath();
+        ctx.arc(0, 0, p.w/2, 0, Math.PI*2);
+        ctx.fill();
+      } else if (p.shape === "ribbon"){
+        ctx.beginPath();
+        ctx.moveTo(-p.w/2, -p.h/2);
+        ctx.quadraticCurveTo(0, 0, p.w/2, -p.h/2);
+        ctx.quadraticCurveTo(0, p.h/2, -p.w/2, p.h/2);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      }
+
+      ctx.restore();
+    }
+
+    function tickConfetti(ts){
+      if (!confetti.on) return;
+
+      const t = ts - confetti.t0;
+      const dt = 16;
+
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      const gravity = 0.12;
+      const drag = 0.995;
+
+      for (let i = confetti.parts.length - 1; i >= 0; i--){
+        const p = confetti.parts[i];
+
+        p.life += dt;
+
+        p.vx *= drag;
+        p.vy *= drag;
+
+        p.vy += gravity;
+
+        p.x += p.vx + Math.sin((p.life/180) * p.swing) * 0.35;
+        p.y += p.vy + Math.cos((p.life/240) * p.sway) * 0.22;
+
+        p.rot += p.vr;
+
+        drawPart(p);
+
+        const out = p.y > window.innerHeight + 80 || p.x < -120 || p.x > window.innerWidth + 120;
+        const dead = p.life > p.ttl;
+
+        if (out || dead){
+          confetti.parts.splice(i, 1);
+        }
+      }
+
+      if (t < 380){
+        confettiRain(14);
+      }
+
+      if (confetti.parts.length === 0 && t > 900){
+        confetti.on = false;
+        confettiCanvas.classList.remove("on");
+        return;
+      }
+
+      requestAnimationFrame(tickConfetti);
+    }
+
+    function startConfetti(){
+      if (prefersReducedMotion) return;
+
+      confetti.on = true;
+      confetti.parts = [];
+      confetti.t0 = performance.now();
+
+      confettiCanvas.classList.add("on");
+
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight * 0.35;
+
+      confettiBurst(cx, cy, 120);
+      setTimeout(() => confettiBurst(cx + 80, cy + 10, 90), 140);
+      setTimeout(() => confettiBurst(cx - 90, cy + 15, 90), 260);
+
+      requestAnimationFrame(tickConfetti);
+    }
+
+    yesBtn.addEventListener("click", () => {
+      startConfetti();
+      viewAsk.classList.add("hidden");
+      viewYes.classList.remove("hidden");
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    });
+  </script>
+</body>
+</html>
