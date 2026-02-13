@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Мурмур</title>
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#1b0f2a;
+      --card:#0f1733cc;
+      --text:#f6f7ff;
+      --muted:#c9cbe6;
+      --yes:#ff4fd8;
+      --yes2:#ffb84f;
+      --shadow: 0 12px 40px rgba(0,0,0,.45);
+      --radius: 22px;
+
+      --yesScale: 1;
+      --nyW: 260px;
+      --nyH: 120px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(1200px 700px at 20% 10%, #2c1b53 0%, transparent 55%),
+                  radial-gradient(900px 600px at 90% 80%, #1a5a4d 0%, transparent 55%),
+                  linear-gradient(160deg, var(--bg1), var(--bg2));
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      overflow:hidden;
+    }
+
+    .card{
+      width:min(720px, 92vw);
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      padding:22px 18px;
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+      position:relative;
+    }
+
+    .header{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(22px, 3.2vw, 34px);
+      letter-spacing: .2px;
+    }
+
+    .sub{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .gifWrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin: 14px 0 18px 0;
+    }
+
+    .gifWrap img{
+      max-width:min(520px, 86vw);
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    .actions{
+      position:relative;
+      height: 140px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:22px;
+      user-select:none;
+      touch-action: manipulation;
+    }
+
+    button{
+      border:0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 18px;
+      font-weight: 750;
+      cursor:pointer;
+      transition: transform .15s ease, filter .15s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      position:relative;
+      z-index:2;
+      white-space:nowrap;
+    }
+
+    .yesShell{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 36px;
+      border-radius: 999px;
+      isolation:isolate;
+      transform: scale(var(--yesScale));
+      transition: transform .18s ease;
+    }
+
+    .yesBtn{
+      background: linear-gradient(135deg, var(--yes), var(--yes2));
+      color:#17061c;
+      text-shadow: 0 1px 0 rgba(255,255,255,.25);
+      transform: translateZ(0);
+      filter: saturate(1.1);
+      animation: breathe 1.9s ease-in-out infinite;
+    }
+    .yesBtn:hover{
+      transform: scale(1.08);
+      filter: brightness(1.05) saturate(1.2);
+    }
+
+    @keyframes breathe{
+      0%{ transform: scale(1.00); }
+      50%{ transform: scale(1.04); }
+      100%{ transform: scale(1.00); }
+    }
+
+    .halo{
+      position:absolute;
+      inset: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 60%),
+                  radial-gradient(circle at 70% 70%, rgba(255,79,216,.45), transparent 58%);
+      filter: blur(10px);
+      opacity:.55;
+      z-index:-1;
+      animation: glow 2.3s ease-in-out infinite;
+    }
+    @keyframes glow{
+      0%{ opacity:.45; transform: scale(1.00); }
+      50%{ opacity:.70; transform: scale(1.05); }
+      100%{ opacity:.45; transform: scale(1.00); }
+    }
+
+    .nyan{
+      position:absolute;
+      width: 44px;
+      height: 44px;
+      pointer-events:none;
+      z-index:3;
+      left:0;
+      top:0;
+      transform: translate(0,0);
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
+      animation: nyanLoop 2.8s linear infinite;
+    }
+    .nyan img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+
+    @keyframes nyanLoop{
+      0%   { transform: translate(0px, 0px); }
+      25%  { transform: translate(var(--nyW), 0px); }
+      50%  { transform: translate(var(--nyW), var(--nyH)); }
+      75%  { transform: translate(0px, var(--nyH)); }
+      100% { transform: translate(0px, 0px); }
+    }
+
+    .noBtn{
+      background: rgba(255,255,255,.08);
+      color: #e8ebff;
+      border:1px solid rgba(255,255,255,.16);
+      position:absolute;
+      left: 60%;
+      top: 65%;
+      transform: translate(-50%, -50%);
+      cursor:not-allowed;
+    }
+
+    .note{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align:center;
+    }
+
+    .hidden{ display:none; }
+
+    .puff{
+      position:fixed;
+      font-size: 20px;
+      pointer-events:none;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+      animation: puffOut .55s ease forwards;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,.35));
+    }
+    @keyframes puffOut{
+      0%{ opacity:0; transform: translate(-50%, -50%) scale(.7); }
+      15%{ opacity:1; transform: translate(-50%, -50%) scale(1); }
+      100%{ opacity:0; transform: translate(-50%, -68%) scale(1.25); }
+    }
+
+    .confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index: 20;
+      overflow:hidden;
+    }
+    .confetti span{
+      position:absolute;
+      width: 10px;
+      height: 16px;
+      border-radius: 4px;
+      background: rgba(255,255,255,.9);
+      opacity:.95;
+      transform: translateY(-30px) rotate(0deg);
+      animation: fall 1.2s ease-in forwards;
+    }
+    @keyframes fall{
+      to{ transform: translateY(110vh) rotate(360deg); opacity:0.85; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .yesBtn{ animation:none; }
+      .halo{ animation:none; }
+      .nyan{ animation:none; }
+      button{ transition:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div id="viewAsk">
+      <div class="header">
+        <div>
+          <h1>Ты будешь моим Мурмуром?</h1>
+          <p class="sub">Выбирай сердцем, а «Нет» сегодня держит дистанцию</p>
+        </div>
+      </div>
+
+      <div class="gifWrap">
+        <img id="mainGif" src="ask.gif" alt="Котёнок" />
+      </div>
+
+      <div class="actions" id="arena">
+        <div class="yesShell" id="yesShell">
+          <div class="halo"></div>
+          <button class="yesBtn" id="yesBtn">Да 💘</button>
+          <div class="nyan" id="nyan">
+            <img src="nyan.gif" alt="Nyan Cat" />
+          </div>
+        </div>
+
+        <button class="noBtn" id="noBtn" aria-disabled="true" tabindex="-1">Нет</button>
+      </div>
+
+      <div class="note">Подсказка: кнопка «Нет» очень стеснительная и на курсор смотрит как на хищника</div>
+    </div>
+
+    <div id="viewYes" class="hidden">
+      <div class="header">
+        <div>
+          <h1>Ура, мой Мурмур 😻</h1>
+          <p class="sub">Это официально и очень приятно</p>
+        </div>
+      </div>
+
+      <div class="gifWrap">
+        <img id="celebrateGif" src="celebrate.gif" alt="Празднуем" />
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti hidden" id="confetti"></div>
+
+  <script>
+    const ASSETS = {
+      ask: "ask.gif",
+      celebrate: "celebrate.gif",
+      nyan: "nyan.gif"
+    };
+
+    const viewAsk = document.getElementById("viewAsk");
+    const viewYes = document.getElementById("viewYes");
+
+    const mainGif = document.getElementById("mainGif");
+    const celebrateGif = document.getElementById("celebrateGif");
+
+    const arena = document.getElementById("arena");
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const yesShell = document.getElementById("yesShell");
+    const nyan = document.getElementById("nyan");
+    const confetti = document.getElementById("confetti");
+
+    [ASSETS.ask, ASSETS.celebrate, ASSETS.nyan].forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+    mainGif.src = ASSETS.ask;
+    celebrateGif.src = ASSETS.celebrate;
+    nyan.querySelector("img").src = ASSETS.nyan;
+
+    function updateNyanPath(){
+      const rect = yesShell.getBoundingClientRect();
+      const pad = 22;
+      const w = Math.max(140, rect.width - pad);
+      const h = Math.max(70, rect.height - pad);
+      document.documentElement.style.setProperty("--nyW", `${w}px`);
+      document.documentElement.style.setProperty("--nyH", `${h}px`);
+    }
+    window.addEventListener("resize", updateNyanPath, { passive: true });
+    updateNyanPath();
+
+    let yesScale = 1;
+    const MIN_DIST = 165;
+    const MARGIN = 12;
+    let rafId = null;
+
+    function rectsOverlap(r1, r2){
+      return !(r2.left > r1.right || r2.right < r1.left || r2.top > r1.bottom || r2.bottom < r1.top);
+    }
+
+    function spawnPuff(x, y){
+      const el = document.createElement("div");
+      el.className = "puff";
+      el.textContent = "💨";
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 650);
+    }
+
+    function setNoPosition(leftPx, topPx){
+      noBtn.style.left = `${leftPx}px`;
+      noBtn.style.top = `${topPx}px`;
+      noBtn.style.transform = "translate(-50%, -50%)";
+    }
+
+    function getNoCenter(){
+      const r = noBtn.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, r };
+    }
+
+    function pickFarPosition(cursorX, cursorY){
+      const noRect = noBtn.getBoundingClientRect();
+      const yesRect = yesShell.getBoundingClientRect();
+
+      const minX = MARGIN + noRect.width / 2;
+      const maxX = window.innerWidth - MARGIN - noRect.width / 2;
+      const minY = MARGIN + noRect.height / 2;
+      const maxY = window.innerHeight - MARGIN - noRect.height / 2;
+
+      let best = null;
+
+      for(let i = 0; i < 70; i++){
+        const x = minX + Math.random() * (maxX - minX);
+        const y = minY + Math.random() * (maxY - minY);
+
+        const dx = x - cursorX;
+        const dy = y - cursorY;
+        const d = Math.hypot(dx, dy);
+
+        const candidateRect = {
+          left: x - noRect.width/2,
+          right: x + noRect.width/2,
+          top: y - noRect.height/2,
+          bottom: y + noRect.height/2
+        };
+
+        const overlapsYes = rectsOverlap(candidateRect, yesRect);
+        if(d >= MIN_DIST && !overlapsYes){
+          return { x, y };
+        }
+
+        if(!best || d > best.d){
+          best = { x, y, d };
+        }
+      }
+
+      return { x: best.x, y: best.y };
+    }
+
+    function bumpYes(){
+      yesScale = Math.min(1.58, yesScale + 0.03);
+      document.documentElement.style.setProperty("--yesScale", yesScale.toFixed(3));
+    }
+
+    function evadeIfNeeded(cursorX, cursorY){
+      const before = getNoCenter();
+      const dx = before.x - cursorX;
+      const dy = before.y - cursorY;
+      const dist = Math.hypot(dx, dy);
+
+      if(dist >= MIN_DIST) return;
+
+      spawnPuff(before.x, before.y);
+      bumpYes();
+
+      const p = pickFarPosition(cursorX, cursorY);
+      setNoPosition(p.x, p.y);
+    }
+
+    function onMouseMove(e){
+      if(rafId) return;
+      const x = e.clientX;
+      const y = e.clientY;
+
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        evadeIfNeeded(x, y);
+      });
+    }
+
+    document.addEventListener("mousemove", onMouseMove, { passive: true });
+
+    document.addEventListener("touchstart", (e) => {
+      const t = e.touches && e.touches[0];
+      if(!t) return;
+      evadeIfNeeded(t.clientX, t.clientY);
+    }, { passive: true });
+
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    function launchConfetti(){
+      confetti.classList.remove("hidden");
+      confetti.innerHTML = "";
+
+      const pieces = 28;
+      for(let i = 0; i < pieces; i++){
+        const s = document.createElement("span");
+        s.style.left = (Math.random() * 100) + "vw";
+        s.style.top = (-10 - Math.random() * 30) + "px";
+
+        const w = 6 + Math.random() * 10;
+        const h = 10 + Math.random() * 18;
+        s.style.width = w + "px";
+        s.style.height = h + "px";
+
+        const hue = Math.floor(Math.random() * 360);
+        s.style.background = `hsla(${hue}, 90%, 70%, 0.95)`;
+
+        confetti.appendChild(s);
+      }
+
+      setTimeout(() => {
+        confetti.classList.add("hidden");
+        confetti.innerHTML = "";
+      }, 1400);
+    }
+
+    yesBtn.addEventListener("click", () => {
+      launchConfetti();
+      viewAsk.classList.add("hidden");
+      viewYes.classList.remove("hidden");
+    });
+
+    (function initNo(){
+      const p = pickFarPosition(window.innerWidth * 0.6, window.innerHeight * 0.6);
+      setNoPosition(p.x, p.y);
+    })();
+  </script>
+</body>
+</html>
