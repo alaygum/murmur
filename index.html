@@ -10,14 +10,10 @@
       --bg2:#1b0f2a;
       --card:#0f1733cc;
       --text:#f6f7ff;
-      --muted:#c9cbe6;
       --yes:#ff4fd8;
       --yes2:#ffb84f;
       --shadow: 0 12px 40px rgba(0,0,0,.45);
       --radius: 22px;
-
-      --nyW: 210px;
-      --nyH: 90px;
     }
 
     *{ box-sizing:border-box; }
@@ -71,7 +67,7 @@
 
     .stage{
       width:min(520px, 86vw);
-      height: 120px;
+      height: 140px;
       margin: 0 auto;
       position:relative;
       user-select:none;
@@ -84,97 +80,39 @@
       padding: 14px 22px;
       font-size: 18px;
       font-weight: 750;
-      cursor:pointer;
-      transition: transform .15s ease, filter .15s ease;
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
       position:absolute;
       top: 50%;
-      transform: translateY(-50%);
+      transform: translate(-50%, -50%);
       white-space:nowrap;
     }
 
-    .yesShell{
-      position:absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 22px 28px;
-      border-radius: 999px;
-      isolation:isolate;
-    }
-
-    .halo{
-      position:absolute;
-      inset: 8px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 60%),
-                  radial-gradient(circle at 70% 70%, rgba(255,79,216,.45), transparent 58%);
-      filter: blur(10px);
-      opacity:.55;
-      z-index:-1;
-      animation: glow 2.3s ease-in-out infinite;
-    }
-
-    @keyframes glow{
-      0%{ opacity:.45; transform: scale(1.00); }
-      50%{ opacity:.70; transform: scale(1.05); }
-      100%{ opacity:.45; transform: scale(1.00); }
-    }
-
     .yesBtn{
-      position:relative;
-      top:auto;
-      transform:none;
+      left: 25%;
+      cursor:pointer;
       background: linear-gradient(135deg, var(--yes), var(--yes2));
       color:#17061c;
       text-shadow: 0 1px 0 rgba(255,255,255,.25);
       filter: saturate(1.1);
       animation: breathe 1.9s ease-in-out infinite;
+      transition: transform .15s ease, filter .15s ease;
     }
-
-    @keyframes breathe{
-      0%{ transform: scale(1.00); }
-      50%{ transform: scale(1.04); }
-      100%{ transform: scale(1.00); }
-    }
-
     .yesBtn:hover{
-      transform: scale(1.08);
+      transform: translate(-50%, -50%) scale(1.08);
       filter: brightness(1.05) saturate(1.2);
+    }
+    @keyframes breathe{
+      0%{ transform: translate(-50%, -50%) scale(1.00); }
+      50%{ transform: translate(-50%, -50%) scale(1.04); }
+      100%{ transform: translate(-50%, -50%) scale(1.00); }
     }
 
     .noBtn{
-      right: 0;
+      left: 75%;
+      cursor:not-allowed;
       background: rgba(255,255,255,.10);
       color: #e8ebff;
       border:1px solid rgba(255,255,255,.18);
-    }
-
-    .nyan{
-      position:absolute;
-      width: 44px;
-      height: 44px;
-      pointer-events:none;
-      z-index:3;
-      left:0;
-      top:0;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
-      animation: nyanLoop 2.8s linear infinite;
-    }
-    .nyan img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-    }
-    @keyframes nyanLoop{
-      0%   { transform: translate(0px, 0px); }
-      25%  { transform: translate(var(--nyW), 0px); }
-      50%  { transform: translate(var(--nyW), var(--nyH)); }
-      75%  { transform: translate(0px, var(--nyH)); }
-      100% { transform: translate(0px, 0px); }
     }
 
     .hidden{ display:none; }
@@ -184,14 +122,28 @@
       font-size: 20px;
       pointer-events:none;
       z-index: 10;
-      transform: translate(-50%, -50%);
-      animation: puffOut .55s ease forwards;
+      --rot: 0deg;
+      --dx1: 0px;
+      --dy1: 0px;
+      --dx2: 0px;
+      --dy2: 0px;
       filter: drop-shadow(0 8px 14px rgba(0,0,0,.35));
+      animation: puffOut .55s ease forwards;
     }
+
     @keyframes puffOut{
-      0%{ opacity:0; transform: translate(-50%, -50%) scale(.7); }
-      15%{ opacity:1; transform: translate(-50%, -50%) scale(1); }
-      100%{ opacity:0; transform: translate(-50%, -68%) scale(1.25); }
+      0%{
+        opacity:0;
+        transform: translate(-50%, -50%) rotate(var(--rot)) scale(.7);
+      }
+      15%{
+        opacity:1;
+        transform: translate(calc(-50% + var(--dx1)), calc(-50% + var(--dy1))) rotate(var(--rot)) scale(1);
+      }
+      100%{
+        opacity:0;
+        transform: translate(calc(-50% + var(--dx2)), calc(-50% + var(--dy2))) rotate(var(--rot)) scale(1.25);
+      }
     }
 
     .confetti{
@@ -216,8 +168,6 @@
 
     @media (prefers-reduced-motion: reduce){
       .yesBtn{ animation:none; }
-      .halo{ animation:none; }
-      .nyan{ animation:none; }
       button{ transition:none; }
     }
   </style>
@@ -232,14 +182,7 @@
       </div>
 
       <div class="stage" id="stage">
-        <div class="yesShell" id="yesShell">
-          <div class="halo"></div>
-          <button class="yesBtn" id="yesBtn">Да 💘</button>
-          <div class="nyan" id="nyan">
-            <img src="nyan.gif" alt="Nyan Cat" />
-          </div>
-        </div>
-
+        <button class="yesBtn" id="yesBtn">Да 💘</button>
         <button class="noBtn" id="noBtn">Нет</button>
       </div>
     </div>
@@ -258,162 +201,231 @@
   <script>
     const ASSETS = {
       ask: "ask.gif",
-      celebrate: "celebrate.gif",
-      nyan: "nyan.gif"
+      celebrate: "celebrate.gif"
     };
 
     const viewAsk = document.getElementById("viewAsk");
     const viewYes = document.getElementById("viewYes");
-
     const mainGif = document.getElementById("mainGif");
     const celebrateGif = document.getElementById("celebrateGif");
 
     const stage = document.getElementById("stage");
-    const yesShell = document.getElementById("yesShell");
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
-    const nyan = document.getElementById("nyan");
     const confetti = document.getElementById("confetti");
 
-    [ASSETS.ask, ASSETS.celebrate, ASSETS.nyan].forEach(src => {
+    [ASSETS.ask, ASSETS.celebrate].forEach(src => {
       const img = new Image();
       img.src = src;
     });
     mainGif.src = ASSETS.ask;
     celebrateGif.src = ASSETS.celebrate;
-    nyan.querySelector("img").src = ASSETS.nyan;
 
-    function updateNyanPath(){
-      const rect = yesShell.getBoundingClientRect();
-      const pad = 34;
-      const w = Math.max(140, rect.width - pad);
-      const h = Math.max(70, rect.height - pad);
-      document.documentElement.style.setProperty("--nyW", `${w}px`);
-      document.documentElement.style.setProperty("--nyH", `${h}px`);
-    }
-    window.addEventListener("resize", updateNyanPath, { passive: true });
-    updateNyanPath();
+    // Настройки поведения "Нет"
+    const SAFE_DIST = 105;        // минимальная дистанция до курсора
+    const GAP_TO_YES = 18;        // минимальный зазор до "Да"
+    const MARGIN = 10;            // отступ от краёв stage
+    const HISTORY_LIMIT = 6;      // чтобы не залипала в 2 точки
+    const HISTORY_MIN_SEP = 55;   // не прыгать в очень близкую прошлую позицию
+    const SAMPLES = 140;          // сколько кандидатов пробовать на прыжок
 
-    const MIN_DIST = 110;
-    const STEP = 70;
-    const MARGIN = 10;
+    let lastPos = [];
     let rafId = null;
 
-    function spawnPuff(x, y){
+    function rectsOverlap(a, b){
+      return !(b.left > a.right || b.right < a.left || b.top > a.bottom || b.bottom < a.top);
+    }
+
+    function getStageRect(){ return stage.getBoundingClientRect(); }
+
+    function getRectInClient(el){ return el.getBoundingClientRect(); }
+
+    function getCenterClient(el){
+      const r = getRectInClient(el);
+      return { x: r.left + r.width/2, y: r.top + r.height/2, r };
+    }
+
+    function clientToStage(x, y){
+      const sr = getStageRect();
+      return { x: x - sr.left, y: y - sr.top };
+    }
+
+    function setNoCenterStage(x, y){
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+      noBtn.style.transform = "translate(-50%, -50%)";
+    }
+
+    function getNoCenterStage(){
+      const sr = getStageRect();
+      const c = getCenterClient(noBtn);
+      return { x: c.x - sr.left, y: c.y - sr.top, clientX: c.x, clientY: c.y };
+    }
+
+    function dist(a, b){
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      return Math.hypot(dx, dy);
+    }
+
+    function spawnPuffFromMove(oldClient, newClient){
+      const vx = newClient.x - oldClient.x;
+      const vy = newClient.y - oldClient.y;
+      const len = Math.hypot(vx, vy) || 1;
+
+      // Пук летит "в хвост", то есть противоположно движению
+      const ux = -(vx / len);
+      const uy = -(vy / len);
+
+      const dx2 = ux * 30;
+      const dy2 = uy * 30;
+      const dx1 = ux * 10;
+      const dy1 = uy * 10;
+
+      const angle = Math.atan2(uy, ux) * 180 / Math.PI;
+
       const el = document.createElement("div");
       el.className = "puff";
       el.textContent = "💨";
-      el.style.left = x + "px";
-      el.style.top = y + "px";
+      el.style.left = oldClient.x + "px";
+      el.style.top = oldClient.y + "px";
+      el.style.setProperty("--rot", angle + "deg");
+      el.style.setProperty("--dx1", dx1 + "px");
+      el.style.setProperty("--dy1", dy1 + "px");
+      el.style.setProperty("--dx2", dx2 + "px");
+      el.style.setProperty("--dy2", dy2 + "px");
+
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 650);
     }
 
-    function rectsOverlap(r1, r2){
-      return !(r2.left > r1.right || r2.right < r1.left || r2.top > r1.bottom || r2.bottom < r1.top);
+    function isFarFromHistory(p){
+      for(const h of lastPos){
+        const d = Math.hypot(p.x - h.x, p.y - h.y);
+        if(d < HISTORY_MIN_SEP) return false;
+      }
+      return true;
     }
 
-    function getNoRect(){ return noBtn.getBoundingClientRect(); }
-
-    function setNoPos(leftPx, topPx){
-      noBtn.style.left = `${leftPx}px`;
-      noBtn.style.top = `${topPx}px`;
-      noBtn.style.right = "auto";
-      noBtn.style.transform = "translate(-50%, -50%)";
+    function inflatedRect(r, pad){
+      return { left:r.left - pad, right:r.right + pad, top:r.top - pad, bottom:r.bottom + pad };
     }
 
-    function ensureNoHasExplicitPos(){
-      const r = getNoRect();
-      const sr = stage.getBoundingClientRect();
-      const x = r.left - sr.left + r.width / 2;
-      const y = r.top - sr.top + r.height / 2;
-      setNoPos(x, y);
-    }
+    function pickNewNoPos(cursorClientX, cursorClientY){
+      const sr = getStageRect();
+      const noR = getRectInClient(noBtn);
+      const yesR = getRectInClient(yesBtn);
 
-    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+      const cursor = clientToStage(cursorClientX, cursorClientY);
 
-    function moveNoAway(cursorX, cursorY){
-      const sr = stage.getBoundingClientRect();
-      const r = getNoRect();
-      const yesR = yesShell.getBoundingClientRect();
+      const minX = MARGIN + noR.width/2;
+      const maxX = sr.width - MARGIN - noR.width/2;
+      const minY = MARGIN + noR.height/2;
+      const maxY = sr.height - MARGIN - noR.height/2;
 
-      const noCx = r.left + r.width/2;
-      const noCy = r.top + r.height/2;
+      const yesInflated = inflatedRect(yesR, GAP_TO_YES);
 
-      const dx = noCx - cursorX;
-      const dy = noCy - cursorY;
-      const dist = Math.hypot(dx, dy);
+      let best = null;
 
-      if(dist >= MIN_DIST) return;
+      for(let i = 0; i < SAMPLES; i++){
+        const x = minX + Math.random() * (maxX - minX);
+        const y = minY + Math.random() * (maxY - minY);
 
-      spawnPuff(noCx, noCy);
+        const candidate = { x, y };
 
-      let ux = dx / (dist || 1);
-      let uy = dy / (dist || 1);
+        const dCursor = dist(candidate, cursor);
+        if(dCursor < SAFE_DIST) continue;
 
-      if(dist === 0){
-        const a = Math.random() * Math.PI * 2;
-        ux = Math.cos(a);
-        uy = Math.sin(a);
+        if(!isFarFromHistory(candidate)) continue;
+
+        const candClientRect = {
+          left: sr.left + x - noR.width/2,
+          right: sr.left + x + noR.width/2,
+          top: sr.top + y - noR.height/2,
+          bottom: sr.top + y + noR.height/2
+        };
+
+        if(rectsOverlap(candClientRect, yesInflated)) continue;
+
+        // Скоринг: хотим быть далеко от курсора и не липнуть к "Да"
+        const yesCenter = { x: (yesR.left + yesR.right)/2 - sr.left, y: (yesR.top + yesR.bottom)/2 - sr.top };
+        const dYes = dist(candidate, yesCenter);
+
+        const score = dCursor * 1.0 + dYes * 0.35;
+
+        if(!best || score > best.score){
+          best = { x, y, score };
+        }
       }
 
-      const jitter = () => (Math.random() - 0.5) * 18;
-
-      let targetX = (noCx - sr.left) + ux * STEP + jitter();
-      let targetY = (noCy - sr.top) + uy * STEP + jitter();
-
-      const minX = MARGIN + r.width/2;
-      const maxX = sr.width - MARGIN - r.width/2;
-      const minY = MARGIN + r.height/2;
-      const maxY = sr.height - MARGIN - r.height/2;
-
-      targetX = clamp(targetX, minX, maxX);
-      targetY = clamp(targetY, minY, maxY);
-
-      const candidate = {
-        left: sr.left + targetX - r.width/2,
-        right: sr.left + targetX + r.width/2,
-        top: sr.top + targetY - r.height/2,
-        bottom: sr.top + targetY + r.height/2
-      };
-
-      if(rectsOverlap(candidate, yesR)){
-        targetX = clamp(targetX + (targetX < sr.width/2 ? -STEP : STEP), minX, maxX);
-        targetY = clamp(targetY + (targetY < sr.height/2 ? -STEP : STEP), minY, maxY);
+      // Если вдруг не нашли, просто телепорт в самый дальний угол от курсора
+      if(!best){
+        const corners = [
+          { x: minX, y: minY },
+          { x: maxX, y: minY },
+          { x: minX, y: maxY },
+          { x: maxX, y: maxY }
+        ];
+        corners.sort((a,b) => dist(b, cursor) - dist(a, cursor));
+        best = corners[0];
       }
 
-      setNoPos(targetX, targetY);
+      return best;
     }
 
-    function onMouseMove(e){
+    function moveNoIfClose(cursorClientX, cursorClientY){
+      const noC = getCenterClient(noBtn);
+      const d = Math.hypot(noC.x - cursorClientX, noC.y - cursorClientY);
+
+      if(d >= SAFE_DIST) return;
+
+      const oldNo = getNoCenterStage();
+      const next = pickNewNoPos(cursorClientX, cursorClientY);
+
+      setNoCenterStage(next.x, next.y);
+
+      const newCenterClient = getCenterClient(noBtn);
+      spawnPuffFromMove({ x: oldNo.clientX, y: oldNo.clientY }, { x: newCenterClient.x, y: newCenterClient.y });
+
+      lastPos.unshift({ x: next.x, y: next.y });
+      lastPos = lastPos.slice(0, HISTORY_LIMIT);
+    }
+
+    function onPointerMove(e){
       if(rafId) return;
       const x = e.clientX;
       const y = e.clientY;
       rafId = requestAnimationFrame(() => {
         rafId = null;
-        moveNoAway(x, y);
+        moveNoIfClose(x, y);
       });
     }
 
-    document.addEventListener("mousemove", onMouseMove, { passive: true });
+    document.addEventListener("mousemove", onPointerMove, { passive: true });
 
+    // Если всё-таки почти поймали "Нет", она дергается сразу
+    noBtn.addEventListener("mouseenter", (e) => {
+      moveNoIfClose(e.clientX, e.clientY);
+    });
+
+    // Мобилки
     stage.addEventListener("touchstart", (e) => {
       const t = e.touches && e.touches[0];
       if(!t) return;
-      moveNoAway(t.clientX, t.clientY);
+      moveNoIfClose(t.clientX, t.clientY);
     }, { passive: true });
 
     stage.addEventListener("touchmove", (e) => {
       const t = e.touches && e.touches[0];
       if(!t) return;
-      moveNoAway(t.clientX, t.clientY);
+      moveNoIfClose(t.clientX, t.clientY);
     }, { passive: true });
 
     noBtn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const r = getNoRect();
-      spawnPuff(r.left + r.width/2, r.top + r.height/2);
+      const c = getCenterClient(noBtn);
+      spawnPuffFromMove({ x: c.x, y: c.y }, { x: c.x - 10, y: c.y + 10 });
     });
 
     function launchConfetti(){
@@ -450,14 +462,11 @@
       window.scrollTo({ top: 0, behavior: "instant" });
     });
 
-    // Инициализация позиции "Нет" в правой части stage, но с явными координатами
+    // Начальная расстановка
     (function init(){
-      ensureNoHasExplicitPos();
-      const sr = stage.getBoundingClientRect();
-      const r = getNoRect();
-      const x = sr.width - (r.width/2) - 14;
-      const y = sr.height / 2;
-      setNoPos(x, y);
+      // "Да" слева, "Нет" справа, без пересечения
+      setNoCenterStage(stage.clientWidth * 0.75, stage.clientHeight * 0.5);
+      lastPos = [{ x: stage.clientWidth * 0.75, y: stage.clientHeight * 0.5 }];
     })();
   </script>
 </body>
