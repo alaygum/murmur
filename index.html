@@ -24,17 +24,38 @@
       width: 100%;
     }
 
-    .ask-title {
-      font-size: clamp(1.8rem, 5vw, 2.5rem);
-      color: #3a7bd5;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      margin-bottom: 30px;
-      line-height: 1.2;
+    /* Единая сетка: текст, гифка, зона кнопок (и на экране 2 тоже) */
+    .screen {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      row-gap: 30px;
+      align-items: start;
+      justify-items: center;
     }
 
+    /* ОДИНАКОВЫЙ текстовый блок для обоих экранов */
+    .titleBlock{
+      width: 100%;
+      min-height: 92px; /* фиксируем высоту, чтобы совпадало по месту */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #3a7bd5;
+      text-align: center;
+      line-height: 1.25;
+      letter-spacing: 0.02em;
+      font-weight: 600;
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+    }
+
+    .titleBlock .line {
+      display: block;
+    }
+
+    /* ОДИНАКОВЫЙ блок гифки */
     .gif-container {
-      margin-bottom: 30px;
+      width: 100%;
       display: flex;
       justify-content: center;
     }
@@ -46,9 +67,12 @@
       border-radius: 16px;
       box-shadow: 0 8px 32px rgba(58, 123, 213, 0.15);
       background: rgba(255,255,255,0.5);
+      display:block;
     }
 
+    /* ОДИНАКОВАЯ по высоте зона под кнопки (на экране 2 тоже есть место) */
     .stage {
+      width: 100%;
       min-height: 120px;
       padding: 20px;
       position: relative;
@@ -94,25 +118,6 @@
 
     .hidden { display: none; }
 
-    .success-text {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      color: #3a7bd5;
-      margin-bottom: 30px;
-      line-height: 1.5;
-      text-align: center;
-      font-weight: 500;
-    }
-
-    .success-text span {
-      display: block;
-    }
-
-    .success-text .ura {
-      font-size: clamp(2rem, 5vw, 2.8rem);
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
     .puff{
       position: fixed;
       left: 0;
@@ -132,18 +137,9 @@
     }
 
     @keyframes puffOut{
-      0%{
-        opacity: 0;
-        transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.7);
-      }
-      16%{
-        opacity: 1;
-        transform: translate(calc(-50% + var(--dx1)), calc(-50% + var(--dy1))) rotate(var(--rot)) scale(1.0);
-      }
-      100%{
-        opacity: 0;
-        transform: translate(calc(-50% + var(--dx2)), calc(-50% + var(--dy2))) rotate(var(--rot)) scale(1.25);
-      }
+      0%{ opacity: 0; transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.7); }
+      16%{ opacity: 1; transform: translate(calc(-50% + var(--dx1)), calc(-50% + var(--dy1))) rotate(var(--rot)) scale(1.0); }
+      100%{ opacity: 0; transform: translate(calc(-50% + var(--dx2)), calc(-50% + var(--dy2))) rotate(var(--rot)) scale(1.25); }
     }
 
     canvas.confetti{
@@ -167,14 +163,19 @@
         min-width: 108px;
         font-size: 1.0rem;
       }
+      .titleBlock{
+        min-height: 86px;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div id="viewAsk">
-      <div class="ask-title">Ты будешь моим Мурмуром?</div>
+    <div id="viewAsk" class="screen">
+      <div class="titleBlock">
+        <span class="line">Ты будешь моим Мурмуром?</span>
+      </div>
 
       <div class="gif-container">
         <img id="askGif" src="ask.gif" alt="Котёнок" loading="eager" />
@@ -186,15 +187,18 @@
       </div>
     </div>
 
-    <div id="viewYes" class="hidden">
-      <div class="success-text">
-        <span class="ura">Ура!</span>
-        <span>Мой любимый ласковый Мурмур!</span>
+    <div id="viewYes" class="screen hidden">
+      <div class="titleBlock">
+        <span class="line">Ура!</span>
+        <span class="line">Мой любимый ласковый Мурмур!</span>
       </div>
 
       <div class="gif-container">
         <img id="celebrateGif" src="celebrate.gif" alt="Празднование" loading="eager" />
       </div>
+
+      <!-- ВАЖНО: stage оставляем, чтобы сетка была идентична -->
+      <div class="stage" aria-hidden="true"></div>
     </div>
   </div>
 
