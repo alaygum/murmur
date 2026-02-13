@@ -26,6 +26,9 @@ html {
       background: transparent;
       margin: 0;
       overflow: hidden;
+      position: relative;
+      isolation: isolate;
+
     }
 
 body::before {
@@ -35,6 +38,8 @@ body::before {
   z-index: -1;
   background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #d4ecff 100%);
   transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
   will-change: transform;
 }
 
@@ -200,7 +205,7 @@ body::before {
       </div>
 
       <div class="stage" id="stage">
-        <button class="btn yesBtn" id="yesBtn">Да 💘</button>
+        <button class="btn yesBtn" id="yesBtn">Да 🥐</button>
         <button class="btn noBtn" id="noBtn" aria-disabled="true" tabindex="-1">Нет</button>
       </div>
     </div>
