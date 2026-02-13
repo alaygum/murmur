@@ -6,17 +6,39 @@
   <title>Мурмур</title>
 
   <style>
+
+    html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+html {
+  background: #f0f8ff;
+}
+
     body {
       font-family: 'Avenir Next', 'Futura', 'Century Gothic', 'Arial', sans-serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #d4ecff 100%);
+      background: transparent;
       margin: 0;
       overflow: hidden;
     }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 50%, #d4ecff 100%);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+    
     .container {
       text-align: center;
       padding: 20px;
